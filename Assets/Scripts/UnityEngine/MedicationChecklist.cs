@@ -16,9 +16,6 @@ public class MedicationChecklist : MonoBehaviour
     
     public void RefreshChecklist(){
 
-        // ask the controller to sort medications before proceeding
-        controller.SortMedications();
-
         // we are pooling checklist items as game objects
         // that way, we are not constantly destroying or creating objects
 

@@ -22,7 +22,7 @@ public class MedicationItem : MonoBehaviour
         Medication med = controller.GetMedication(i);
         nameLabel.text = med.Name;
         TimeSpan timeUntil = med.GetTimeUntil();
-        int status = med.GetStatus();
+        int status = controller.HasDoseBeenTakenToday(index) ? 3 : med.GetTimePosition();
         for(int s = 0; s < 3; s++){
             stars[s].isOn = s < med.Stars;
             stars[s].interactable = false;
@@ -53,7 +53,7 @@ public class MedicationItem : MonoBehaviour
                 else
                     statusLabelLate.text = "Due " + timeUntil.Minutes + " minutes ago (Late).";
                 break;
-            default:
+            default:    // presumably, if it has been taken
                 statusLabelRegular.gameObject.SetActive(true);
                 statusLabelLate.gameObject.SetActive(false);
                 statusLabelRegular.text = "Taken.";

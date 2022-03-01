@@ -16,6 +16,7 @@ public class Medication : IComparable<Medication>
     public int Color { get; set; }
     public int Shape { get; set; }
     public bool Active { get; set; }
+    public int Status { get; set; }
 
     public Medication(){
         ID = -1;
@@ -51,12 +52,7 @@ public class Medication : IComparable<Medication>
     // returns 0 if early
     // returns 1 if within window
     // returns 2 if after window
-    // returns 3 if taken
-    public int GetStatus(){
-
-        // if medication has been taken today
-        if(Taken)
-            return 3;
+    public int GetTimePosition(){
 
         // if current time is less than notify time
         if(TimeKeeper.GetTime() < NotifyTime)
@@ -76,13 +72,6 @@ public class Medication : IComparable<Medication>
     public TimeSpan GetTimeUntil(){
 
         return NotifyTime - TimeKeeper.GetTime();
-
-    }
-
-    public Medication Take(){
-
-        Taken = true;
-        return this;
 
     }
 

@@ -48,11 +48,8 @@ public class DBController : MonoBehaviour
 
     private void CheckDate(){
 
-
-
         DateTime today = TimeKeeper.GetDate();
         
-
         // find previous date recorded
         DateTime prev = new DateTime(0);
         reader = dao.query("SELECT MAX(date) FROM dates;");
@@ -79,9 +76,10 @@ public class DBController : MonoBehaviour
             if(daysSince > 0){
 
                 // for each day from previous recorded to today
-                for(prev.AddDays(1); (today - prev).Days >= 0; prev.AddDays(1)){
+                for(prev = prev.AddDays(1); (today - prev).Days >= 0; prev = prev.AddDays(1)){
 
                     string code = prev.ToString("yyyy-MM-dd");
+                    Debug.Log("Creating record for " + code);
 
                     // insert missing day into database and log medications
                     dao.query("INSERT INTO dates (date, rating, tags) VALUES ('" + code + "',0,'');").Close();
@@ -107,20 +105,29 @@ public class DBController : MonoBehaviour
 
     }
 
-    public List<Medication> LogMedications(DateTime date){
+    public void LogMedications(DateTime date){
 
         string code = TimeKeeper.dayCodes[(int)date.DayOfWeek];
 
-        List<Medication> medications = new List<Medication>();
+        List<int> ids = new List<int>();
 
-        reader = dao.query("SELECT * FROM doses WHERE " + code + "=1 AND active=1;");
+        reader = dao.query("SELECT id FROM doses WHERE " + code + "=1 AND active=1;");
         while(reader.Read()){
-            Debug.Log(new Medication(reader).GetSqlValues());
+            ids.Add(int.Parse(reader[0].ToString()));
         }
-
         reader.Close();
 
-        return medications;
+        foreach(int id in ids){
+            LogMedication(id, date);
+        }
+
+    }
+
+    public void LogMedication(int id, DateTime date){
+
+        string dateCode = date.ToString("yyyy-MM-dd");
+        reader = dao.query("INSERT OR IGNORE INTO logs (id, date, status) VALUES (" + id + ",'" + dateCode + "',0);");
+        reader.Close();
 
     }
 
@@ -130,8 +137,71 @@ public class DBController : MonoBehaviour
         string command = "INSERT INTO doses " + medication.GetSqlColumns() + " VALUES " + medication.GetSqlValues() + ";";
         reader = dao.query(command);
         reader.Close();
+
+        reader = dao.query("SELECT MAX(id) FROM doses");
+        int id = int.Parse(reader[0].ToString());
+        reader.Close();
         
-        return 0;
+        LogMedications(TimeKeeper.GetDate());
+
+        return id;
+
+    }
+
+    public List<int> GetDoseIDs(DateTime date){
+
+        List<int> ids = new List<int>();
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT id FROM logs WHERE date='" + d + "';");
+        while(reader.Read()){
+            ids.Add(int.Parse(reader[0].ToString()));
+        }
+        reader.Close();
+        return ids;
+
+    }
+
+    public List<Medication> GetMedications(DateTime date){
+
+        List<Medication> medications = new List<Medication>();
+        string d = date.ToString("yyyy-MM-dd");
+        string subquery = "SELECT id FROM logs WHERE date='" + d + "'";
+        reader = dao.query("SELECT * FROM doses WHERE id in (" + subquery + ") ORDER BY time;");
+        while(reader.Read()){
+            medications.Add(new Medication(reader));
+        }
+        reader.Close();
+        return medications;
+
+    }
+
+    public Medication GetMedication(int id){
+
+        reader = dao.query("SELECT * FROM doses WHERE id=" + id + ";");
+        Medication medication = new Medication(reader);
+        reader.Close();
+        return medication;
+
+    }
+
+    // 0 == untaken
+    // 1 == taken
+    // 2 == taken late
+    public void ChangeLogStatus(int id, DateTime date, int status){
+
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("UPDATE logs SET status=" + status + " WHERE id=" + id + " AND date='" + d + "';");
+        reader.Close();
+
+    }
+
+    public int GetLogStatus(int id, DateTime date){
+
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT status FROM logs WHERE id=" + id + " AND date='" + d + "';");
+        int status = int.Parse(reader[0].ToString());
+        reader.Close();
+        return status;
 
     }
 

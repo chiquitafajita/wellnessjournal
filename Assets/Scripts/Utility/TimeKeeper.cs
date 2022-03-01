@@ -19,6 +19,6 @@ public static class TimeKeeper {
 
     public static DateTime GetDate() { return DateTime.Today; }
 
-    public static string[] dayCodes = {"sun", "mon", "tues", "wed", "thu", "fri", "sat"};
+    public static string[] dayCodes = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
 
 }
