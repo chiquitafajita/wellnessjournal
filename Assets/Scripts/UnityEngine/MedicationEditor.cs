@@ -122,7 +122,7 @@ public class MedicationEditor : MonoBehaviour
 
     public void DeleteMedication(){
 
-        if(medIndex != =1)
+        if(medIndex != -1)
             controller.DeleteMedication(medIndex);
         Close();
 
