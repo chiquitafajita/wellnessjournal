@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Data;
 
 public class Medication : IComparable<Medication>
 {
@@ -10,7 +11,6 @@ public class Medication : IComparable<Medication>
     public TimeSpan NotifyTime { get; set; }
     public TimeSpan Window { get; set; }
     public bool Taken { get; set; }
-    public DateTime LastTaken { get; set; }
     public int Stars { get; set; }
     public bool[] Weekdays { get; set; }
     public int Color { get; set; }
@@ -28,6 +28,24 @@ public class Medication : IComparable<Medication>
         Color = 0;
         Shape = 0;
         Active = true;
+    }
+
+    public Medication(IDataReader reader){
+        ID = int.Parse(reader[0].ToString());
+        Name = reader[1].ToString();
+        NotifyTime = new TimeSpan(long.Parse(reader[2].ToString()));
+        Weekdays = new bool[7];
+        Weekdays[0] = bool.Parse(reader[3].ToString());
+        Weekdays[1] = bool.Parse(reader[4].ToString());
+        Weekdays[2] = bool.Parse(reader[5].ToString());
+        Weekdays[3] = bool.Parse(reader[6].ToString());
+        Weekdays[4] = bool.Parse(reader[7].ToString());
+        Weekdays[5] = bool.Parse(reader[8].ToString());
+        Weekdays[6] = bool.Parse(reader[9].ToString());
+        Active = bool.Parse(reader[10].ToString());
+        Color = int.Parse(reader[11].ToString());
+        Shape = int.Parse(reader[12].ToString());
+
     }
 
     // returns 0 if early
@@ -64,7 +82,6 @@ public class Medication : IComparable<Medication>
     public Medication Take(){
 
         Taken = true;
-        LastTaken = TimeKeeper.GetDateTime();
         return this;
 
     }
@@ -81,15 +98,9 @@ public class Medication : IComparable<Medication>
 
     public int GetDaysSinceLastTaken(){
 
-        return (TimeKeeper.GetDateTime() - LastTaken).Days;
+        return 0;
 
     }
-
-    // public int GetDosesMissed(){
-
-
-
-    // }
 
     public int CompareTo(Medication other){
 

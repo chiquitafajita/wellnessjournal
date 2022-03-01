@@ -18,7 +18,6 @@ public class MedicationController : MonoBehaviour
 
     public int AddMedication(Medication medication){
         medications.Add(medication);
-        Debug.Log(medication.GetSqlValues());
         database.InsertMedication(medication);
         return MaxIndex;
     }

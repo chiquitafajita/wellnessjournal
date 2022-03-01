@@ -12088,7 +12088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b94b6ac49766d3429a6ffe93e1c1e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  database: {fileID: 0}
+  database: {fileID: 1573881099}
   checklist: {fileID: 1047846140}
 --- !u!224 &1727462432
 RectTransform:
