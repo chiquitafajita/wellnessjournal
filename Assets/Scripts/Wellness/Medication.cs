@@ -44,8 +44,9 @@ public class Medication : IComparable<Medication>
         Weekdays[5] = bool.Parse(reader[8].ToString());
         Weekdays[6] = bool.Parse(reader[9].ToString());
         Active = bool.Parse(reader[10].ToString());
-        Color = int.Parse(reader[11].ToString());
-        Shape = int.Parse(reader[12].ToString());
+        Stars = int.Parse(reader[11].ToString());
+        Color = int.Parse(reader[12].ToString());
+        Shape = int.Parse(reader[13].ToString());
 
     }
 
