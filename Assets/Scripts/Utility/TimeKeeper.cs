@@ -11,7 +11,9 @@ public static class TimeKeeper {
 
     public static int GetDayOfWeek() { return (int)DateTime.Now.DayOfWeek; }
 
-    public static string GetMonth(){ return months[DateTime.Now.Month - 1]; }
+    public static string GetMonth(){ return GetMonth(DateTime.Now.Month); }
+    
+    public static string GetMonth(int month){ return months[month - 1]; }
 
     public static int GetYear() { return DateTime.Now.Year; }
 
