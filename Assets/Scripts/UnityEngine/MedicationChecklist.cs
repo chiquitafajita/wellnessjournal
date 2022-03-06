@@ -8,7 +8,8 @@ public class MedicationChecklist : MonoBehaviour
     public MedicationController controller;
     public GameObject itemTemplate;
     public Transform contentWindow;
-    public List<GameObject> items;
+    private List<GameObject> items;
+    public bool showTaken = false;
 
     private void Start() {
         items = new List<GameObject>();

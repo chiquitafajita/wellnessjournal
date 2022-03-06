@@ -53,7 +53,7 @@ public class MedicationItem : MonoBehaviour
                 else
                     statusLabelLate.text = "Due " + timeUntil.Minutes + " minutes ago (Late).";
                 break;
-            default:    // presumably, if it has been taken
+            default:
                 statusLabelRegular.gameObject.SetActive(true);
                 statusLabelLate.gameObject.SetActive(false);
                 statusLabelRegular.text = "Taken.";
@@ -66,7 +66,6 @@ public class MedicationItem : MonoBehaviour
     public void Take(){
 
         controller.TakeMedication(index);
-        Refresh(controller, index);
 
     }
 

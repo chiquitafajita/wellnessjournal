@@ -9,10 +9,11 @@ public class MedicationController : MonoBehaviour
     public MedicationChecklist checklist;
     public int MaxIndex { get { return medications.Count - 1; } }
     private List<Medication> medications;
+    public bool showTakenDoses = false;
 
     private void Start() {
         
-        medications = database.GetMedications(TimeKeeper.GetDate());
+        medications = database.GetMedications(TimeKeeper.GetDate(), showTakenDoses);
         checklist.RefreshChecklist();
 
     }
@@ -25,7 +26,7 @@ public class MedicationController : MonoBehaviour
         if(medication.GetTimePosition() == 2)
             database.ChangeLogStatus(id, TimeKeeper.GetDate(), 1);
 
-        medications = database.GetMedications(TimeKeeper.GetDate());
+        medications = database.GetMedications(TimeKeeper.GetDate(), showTakenDoses);
     }
 
     public void EditMedication(int index, Medication medication){
@@ -40,6 +41,7 @@ public class MedicationController : MonoBehaviour
         int status = medications[index].GetTimePosition() == 2 ?    // equals 2 if late
                     2 : 1;  // if late, status is 2; otherwise it is 1
         database.ChangeLogStatus(medications[index].ID, TimeKeeper.GetDate(), status);
+        checklist.RefreshChecklist();
     }
 
     public void DeleteMedication(int index){

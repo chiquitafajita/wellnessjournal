@@ -161,11 +161,12 @@ public class DBController : MonoBehaviour
 
     }
 
-    public List<Medication> GetMedications(DateTime date){
+    public List<Medication> GetMedications(DateTime date, bool showTakenDoses){
 
         List<Medication> medications = new List<Medication>();
         string d = date.ToString("yyyy-MM-dd");
         string subquery = "SELECT id FROM logs WHERE date='" + d + "'";
+        if(!showTakenDoses) subquery += " AND status=0";
         reader = dao.query("SELECT * FROM doses WHERE id in (" + subquery + ") ORDER BY time;");
         while(reader.Read()){
             medications.Add(new Medication(reader));
@@ -208,6 +209,16 @@ public class DBController : MonoBehaviour
     public void UpdateMedication(Medication medication){
 
 
+
+    }
+
+    public bool IsDayRecorded(DateTime date){
+
+        reader = dao.query("SELECT min(date) FROM dates;");
+        DateTime oldest = DateTime.ParseExact(reader[0].ToString(), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        reader.Close();
+
+        return date >= oldest;
 
     }
 
