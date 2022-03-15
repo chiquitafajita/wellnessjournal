@@ -2,31 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MedicationChecklist : MonoBehaviour
+public class MedicationList : MonoBehaviour
 {
 
+    public GameObject menu;
     public MedicationController controller;
+    public MedicationEditor editor;
     public GameObject itemTemplate;
     public Transform contentWindow;
     private List<GameObject> items;
-    public bool showTaken = false;
+    private List<Medication> meds;
 
-    public void Setup() {
+    public void Setup(){
         items = new List<GameObject>();
         Refresh();
     }
-    
+
     public void Refresh(){
 
-        // we are pooling checklist items as game objects
-        // that way, we are not constantly destroying or creating objects
+        meds = controller.GetAllMedications();
 
-        // set all existing items inactive
-        for(int i = 0; i < items.Count; i++){
-            items[i].SetActive(false);
-        }
-
-        List<Medication> meds = controller.GetMedicationsScheduledToday();
+        foreach(GameObject go in items)
+            go.SetActive(false);
 
         // for each dose:
         for(int i = 0; i < meds.Count; i++){
@@ -35,14 +32,21 @@ public class MedicationChecklist : MonoBehaviour
             if(i >= items.Count){
                 items.Add(GameObject.Instantiate(itemTemplate));
                 items[i].transform.SetParent(contentWindow);
+                items[i].transform.localScale = Vector3.one;
             }
 
             // set the object active and refresh it with data from controller
             items[i].SetActive(true);
-            MedicationItem mi = items[i].GetComponent<MedicationItem>();
-            mi.Refresh(controller, meds[i]);
+            MedicationRecord mi = items[i].GetComponent<MedicationRecord>();
+            mi.Refresh(this, meds[i]);
 
         }
+
+    }
+
+    public Medication GetMedication(int index){
+
+        return meds[index];
 
     }
 

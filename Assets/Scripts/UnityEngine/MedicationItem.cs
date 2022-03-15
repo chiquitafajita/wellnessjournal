@@ -12,17 +12,16 @@ public class MedicationItem : MonoBehaviour
     public Toggle[] stars;
 
     private MedicationController controller;
-    private int index;
+    private int id;
 
-    public void Refresh(MedicationController controller, int i){
+    public void Refresh(MedicationController controller, Medication med){
 
         this.controller = controller;
-        this.index = i;
+        this.id = med.ID;
 
-        Medication med = controller.GetMedication(i);
         nameLabel.text = med.Name;
         TimeSpan timeUntil = med.GetTimeUntil();
-        int status = controller.HasDoseBeenTakenToday(index) ? 3 : med.GetTimePosition();
+        int status = controller.HasDoseBeenTakenToday(med.ID) ? 3 : med.GetTimePosition();
         for(int s = 0; s < 3; s++){
             stars[s].isOn = s < med.Stars;
             stars[s].interactable = false;
@@ -65,7 +64,7 @@ public class MedicationItem : MonoBehaviour
 
     public void Take(){
 
-        controller.TakeMedication(index);
+        controller.TakeMedication(id);
 
     }
 

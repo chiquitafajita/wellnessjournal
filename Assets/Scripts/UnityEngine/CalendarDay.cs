@@ -7,23 +7,53 @@ using System;
 public class CalendarDay : MonoBehaviour
 {
 
+    public Image rating;
     public Button dayButton;
-    public Image square;
     public Image todayIndicator;
+    public Text dateLabel;
     
     private DateTime date;
 
     private DBController database;
 
-    public void Refresh(DBController database, DateTime date, bool isToday, bool isBeforeThisWeek){
+    public void Refresh(DBController database, DateTime date, bool isToday, bool exists){
 
         this.database = database;
         this.date = date;
 
+        dateLabel.text = date.Day + "";
+        dayButton.interactable = exists;
+        if(exists){
+            dateLabel.text = "" + database.GetDayGrade(date);
+            // rating.enabled = true;
+            // switch(database.GetDayRating(date)){
+            //     case -2:
+            //         rating.color = Color.red;
+            //         break;
+                    
+            //     case -1:
+            //         rating.color = new Color(1, .646F, 0);
+            //         break;
+                    
+            //     case 0:
+            //         rating.color = Color.yellow;
+            //         break;
+                    
+            //     case 1:
+            //         rating.color = Color.green;
+            //         break;
+                    
+            //     case 2:
+            //         rating.color = Color.blue;
+            //         break;
+                    
+            // }
 
-        dayButton.interactable = database.IsDayRecorded(date);
-        square.color = isBeforeThisWeek ? new Color(1, 1, 1, 0.5F) : Color.white;
-        Debug.Log(square.color);
+        }
+        else{
+            //rating.enabled = false;
+        }
+
         todayIndicator.gameObject.SetActive(isToday);
 
     }

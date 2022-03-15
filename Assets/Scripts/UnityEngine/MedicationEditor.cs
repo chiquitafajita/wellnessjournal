@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MedicationEditor : MonoBehaviour
 {
-
+    public GameObject menu;
     public InputField medName;
     public InputField medHour;
     public InputField medMins;
@@ -18,23 +18,33 @@ public class MedicationEditor : MonoBehaviour
 
     public MedicationController controller;
     private Medication medication;
-    private int medIndex = -1;  // equals -1 if creating a new medication
+
+    private GameObject referrer;
+
+    // defaults to index = -1
+    public void Open(GameObject referrer){
+
+        Open(referrer, -1);
+
+    }
 
     // if index == -1, a new medication will be created
     // otherwise, the medication at the index will be accessed
-    public void EditMedication(int index){
+    public void Open(GameObject referrer, int id){
 
-        // set our index to the method being called
-        medIndex = index;
-
+        this.referrer = referrer;
+        referrer.SetActive(false);
+        menu.SetActive(true);
+        
         // create new medication or get existing medication
-        medication = medIndex == -1 ? new Medication() : controller.GetMedication(medIndex);
+        medication = id == -1 ? new Medication() : controller.GetMedicationByID(id);
 
         // set if time is AM or PM
         ifPM = medication.NotifyTime.Hours > 11;
 
         // refresh GUI
         RefreshGUI();
+        
 
     }
 
@@ -106,24 +116,26 @@ public class MedicationEditor : MonoBehaviour
 
     private void Close(){
 
-        controller.checklist.RefreshChecklist();
+        controller.Refresh();
+        referrer.SetActive(true);
+        menu.SetActive(false);
 
     }
 
     public void SaveMedication(){
 
-        if(medIndex == -1)
+        if(medication.ID == -1)
             controller.AddMedication(medication);
         else
-            controller.EditMedication(medIndex, medication);
+            controller.EditMedication(medication);
         Close();
 
     }
 
     public void DeleteMedication(){
 
-        if(medIndex != -1)
-            controller.DeleteMedication(medIndex);
+        if(medication.ID != -1)
+            controller.DeleteMedication(medication);
         Close();
 
     }

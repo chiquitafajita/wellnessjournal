@@ -10,7 +10,7 @@ public class DBController : MonoBehaviour
     private IDataReader reader;
 
     // open database at start of program
-    void Start()
+    void Awake()
     {
 
         // open database at path
@@ -161,13 +161,25 @@ public class DBController : MonoBehaviour
 
     }
 
-    public List<Medication> GetMedications(DateTime date, bool showTakenDoses){
+    public List<Medication> GetMedicationsForDay(DateTime date, bool showTakenDoses){
 
         List<Medication> medications = new List<Medication>();
         string d = date.ToString("yyyy-MM-dd");
         string subquery = "SELECT id FROM logs WHERE date='" + d + "'";
         if(!showTakenDoses) subquery += " AND status=0";
         reader = dao.query("SELECT * FROM doses WHERE id in (" + subquery + ") ORDER BY time;");
+        while(reader.Read()){
+            medications.Add(new Medication(reader));
+        }
+        reader.Close();
+        return medications;
+
+    }
+
+    public List<Medication> GetAllMedications(){
+
+        List<Medication> medications = new List<Medication>();
+        reader = dao.query("SELECT * FROM doses ORDER BY time;");
         while(reader.Read()){
             medications.Add(new Medication(reader));
         }
@@ -186,8 +198,8 @@ public class DBController : MonoBehaviour
     }
 
     // 0 == untaken
-    // 1 == taken
-    // 2 == taken late
+    // 1 == taken late
+    // 2 == taken on time
     public void ChangeLogStatus(int id, DateTime date, int status){
 
         string d = date.ToString("yyyy-MM-dd");
@@ -206,19 +218,102 @@ public class DBController : MonoBehaviour
 
     }
 
+    public char GetDayGrade(DateTime date){
+
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT AVG(status) FROM logs WHERE date='" + d + "';");
+        float average = String.IsNullOrEmpty(reader[0].ToString()) ? -1 : float.Parse(reader[0].ToString()) / 2;
+        reader.Close();
+
+        char grade = 'F';
+
+        if(average >= 0.9F)
+            grade = 'A';
+        else if(average >= 0.8F)
+            grade = 'B';
+        else if(average >= 0.7F)
+            grade = 'C';
+        else if(average >= 0.6F)
+            grade = 'D';
+        else if(average == -1)
+            grade = '-';
+
+        return grade;
+
+    }
+
     public void UpdateMedication(Medication medication){
 
+        // get existing record
+        Medication oldRecord = GetMedication(medication.ID);
 
+        // update record
+        string query = "UPDATE doses SET " + medication.GetUpdate() + " WHERE id=" + medication.ID + ";";
+        reader = dao.query(query);
+        reader.Close();
+
+        // get current day of week
+        int dayOfWeek = TimeKeeper.GetDayOfWeek();
+
+        // if scheduled times differ between old record and update
+        if(oldRecord.Weekdays[dayOfWeek] != medication.Weekdays[dayOfWeek]){
+            
+            string d = TimeKeeper.GetDate().ToString("yyyy-MM-dd");
+
+            // if now the dose is scheduled for that day and it is today, create log
+            if(medication.Weekdays[dayOfWeek]){
+                LogMedication(medication.ID, TimeKeeper.GetDate());
+            }
+
+            // otherwise, delete the log scheduled for today
+            else{
+                reader = dao.query("DELETE FROM logs WHERE id=" + medication.ID + " AND date='" + d + "';");
+                reader.Close();
+            }
+
+        }
+
+    }
+
+    public void DeleteMedication(Medication medication){
+
+        reader = dao.query("DELETE FROM doses WHERE id=" + medication.ID + ";");
+        reader.Close();
+
+        reader = dao.query("DELETE FROM logs WHERE id=" + medication.ID + ";");
+        reader.Close();
 
     }
 
     public bool IsDayRecorded(DateTime date){
 
+        return date >= GetEarliestDate() && date <= TimeKeeper.GetDate();
+
+    }
+
+    public DateTime GetEarliestDate(){
+
         reader = dao.query("SELECT min(date) FROM dates;");
         DateTime oldest = DateTime.ParseExact(reader[0].ToString(), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
         reader.Close();
 
-        return date >= oldest;
+        return oldest;
+
+    }
+
+    public int GetDayRating(DateTime date){
+
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT rating FROM dates WHERE date='" + d + "';");
+        int rating = 0;
+        try{
+            rating = int.Parse(reader[0].ToString());
+        }
+        catch(FormatException e){
+            Debug.LogWarning("Wrong Format: " + reader[0].ToString() + "\n" + e);
+        }
+        reader.Close();
+        return rating;
 
     }
 

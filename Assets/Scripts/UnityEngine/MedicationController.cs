@@ -7,51 +7,72 @@ public class MedicationController : MonoBehaviour
     
     public DBController database;
     public MedicationChecklist checklist;
-    public int MaxIndex { get { return medications.Count - 1; } }
-    private List<Medication> medications;
+    public MedicationList listAll;
     public bool showTakenDoses = false;
 
-    private void Start() {
-        
-        medications = database.GetMedications(TimeKeeper.GetDate(), showTakenDoses);
-        checklist.RefreshChecklist();
+    private void Awake() {
+        checklist.Setup();
+        listAll.Setup();
+    }
 
+    public void Refresh(){
+        checklist.Refresh();
+        listAll.Refresh();
     }
 
     public void AddMedication(Medication medication){
+
         int id = database.InsertMedication(medication);
 
         // if the notify time was designated prior to when it was created
         // count as taken so that the user doesn't get points off
         if(medication.GetTimePosition() == 2)
-            database.ChangeLogStatus(id, TimeKeeper.GetDate(), 1);
+            database.ChangeLogStatus(id, TimeKeeper.GetDate(), 2);
 
-        medications = database.GetMedications(TimeKeeper.GetDate(), showTakenDoses);
+        Refresh();
+
     }
 
-    public void EditMedication(int index, Medication medication){
-        Debug.LogError("UNIMPLEMENTED.");
+    public void EditMedication(Medication medication){
+        database.UpdateMedication(medication);
+        Refresh();
     }
 
-    public Medication GetMedication(int index){
-        return medications[index];
+    public void TakeMedication(int id){
+        int status = database.GetMedication(id).GetTimePosition() == 2 ?    // equals 2 if late
+                    1 : 2;  // if late, status is 1; otherwise it is 2
+                            // this way we can score late medications as half-worth
+        database.ChangeLogStatus(id, TimeKeeper.GetDate(), status);
+        Refresh();
     }
 
-    public void TakeMedication(int index){
-        int status = medications[index].GetTimePosition() == 2 ?    // equals 2 if late
-                    2 : 1;  // if late, status is 2; otherwise it is 1
-        database.ChangeLogStatus(medications[index].ID, TimeKeeper.GetDate(), status);
-        checklist.RefreshChecklist();
+    public void DeleteMedication(Medication medication){
+        database.DeleteMedication(medication);
+        Refresh();
     }
 
-    public void DeleteMedication(int index){
-        Debug.LogError("UNIMPLEMENTED.");
+    public Medication GetMedicationByID(int id){
+
+        return database.GetMedication(id);
+
     }
 
-    public bool HasDoseBeenTakenToday(int index){
+    public List<Medication> GetAllMedications(){
+
+        return database.GetAllMedications();
+
+    }
+
+    public List<Medication> GetMedicationsScheduledToday(){
+
+        return database.GetMedicationsForDay(TimeKeeper.GetDate(), showTakenDoses);
+
+    }
+
+    public bool HasDoseBeenTakenToday(int id){
 
         // if status is > 0, then it has not been taken or taken late
-        return database.GetLogStatus(medications[index].ID, TimeKeeper.GetDate()) > 0;
+        return database.GetLogStatus(id, TimeKeeper.GetDate()) > 0;
 
     }
 

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +6,8 @@ using System;
 public class CalendarController : MonoBehaviour
 {
 
+    public Button lastMonth;
+    public Button nextMonth;
     public DBController database;
     public GameObject dayTemplate;
     public GameObject blankTemplate;
@@ -15,39 +16,15 @@ public class CalendarController : MonoBehaviour
 
     private List<GameObject> blanks;
     private List<GameObject> days;
+    private DateTime current;
 
     // Start is called before the first frame update
-    void Start() {
+    void Awake() {
 
         days = new List<GameObject>();
         blanks = new List<GameObject>();
         RefreshCalendar(TimeKeeper.GetDate());
         
-    }
-
-    public void RefreshCalendar(){
-
-        // set all existing day buttons inactive
-        for(int i = 0; i < days.Count; i++){
-            days[i].SetActive(false);
-        }
-
-        DateTime today = TimeKeeper.GetDate();
-        int daysToLoad = 28 + TimeKeeper.GetDayOfWeek();
-
-        for(int i = 0; i <= daysToLoad; i++){
-
-            if(i >= days.Count){
-                days.Add(GameObject.Instantiate(dayTemplate));
-                days[i].transform.SetParent(calendarGrid);
-            }
-
-            days[i].SetActive(true);
-            CalendarDay cd = days[i].GetComponent<CalendarDay>();
-            cd.Refresh(database, today.AddDays(i  - daysToLoad), i == daysToLoad, i < 28);
-
-        }
-
     }
 
     public void RefreshCalendar(DateTime includedDate){
@@ -56,9 +33,17 @@ public class CalendarController : MonoBehaviour
         int month = includedDate.Month;
 
         monthLabel.text = TimeKeeper.GetMonth(month) + " " + year;
+
+        foreach(GameObject obj in days){
+            obj.SetActive(false);
+        }
+
+        foreach(GameObject obj in blanks){
+            obj.SetActive(false);
+        }
         
         // add blanks in first week of the month
-        DateTime current = new DateTime(year, month, 1);
+        current = new DateTime(year, month, 1);
         for(int d = 0; d < (int)current.DayOfWeek; d++){
 
             if(d >= blanks.Count){
@@ -84,9 +69,29 @@ public class CalendarController : MonoBehaviour
             days[i].SetActive(true);
             days[i].transform.SetAsLastSibling();
             CalendarDay cd = days[i].GetComponent<CalendarDay>();
-            cd.Refresh(database, current, i+1 == TimeKeeper.GetDate().Day, true);
+            cd.Refresh(database, current, current == TimeKeeper.GetDate(), database.IsDayRecorded(current));
 
         }
+
+        DateTime earliest = database.GetEarliestDate();
+        lastMonth.interactable = includedDate.Month > earliest.Month || includedDate.Year > earliest.Year;
+
+        DateTime today = TimeKeeper.GetDate();
+        nextMonth.interactable = includedDate.Month < today.Month || includedDate.Year < today.Year;
+
+    }
+
+    public void GoToLastMonth(){
+
+        DateTime last = new DateTime(current.Year, current.Month, 1).AddMonths(-1);
+        RefreshCalendar(last);
+
+    }
+
+    public void GoToNextMonth(){
+
+        DateTime next = new DateTime(current.Year, current.Month, 1).AddMonths(1);
+        RefreshCalendar(next);
 
     }
 

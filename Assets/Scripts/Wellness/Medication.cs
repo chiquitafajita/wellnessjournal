@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Data;
+using UnityEngine;
 
 public class Medication : IComparable<Medication>
 {
@@ -9,7 +10,6 @@ public class Medication : IComparable<Medication>
     public int ID { get; set; }
     public string Name { get; set; }
     public TimeSpan NotifyTime { get; set; }
-    public TimeSpan Window { get; set; }
     public bool Taken { get; set; }
     public int Stars { get; set; }
     public bool[] Weekdays { get; set; }
@@ -22,7 +22,6 @@ public class Medication : IComparable<Medication>
         ID = -1;
         Name = "Medication";
         NotifyTime = new TimeSpan(TimeKeeper.GetTime().Hours, TimeKeeper.GetTime().Minutes, 0);
-        Window = new TimeSpan(1, 0, 0);
         Taken = false;
         Stars = 1;
         Weekdays = new bool[]{true, true, true, true, true, true, true};
@@ -60,8 +59,9 @@ public class Medication : IComparable<Medication>
             return 0;
 
         // if we are still within ideal window
-        else if(TimeKeeper.GetTime() < NotifyTime + Window)
+        else if(TimeKeeper.GetTime() < NotifyTime.Add(new TimeSpan(1, 0, 0)))
             return 1;
+
 
         // if we are past the ideal window
         return 2;
@@ -147,6 +147,27 @@ public class Medication : IComparable<Medication>
 
     private int GetBit(bool boolean){
         return boolean ? 1 : 0;
+    }
+
+    public string GetUpdate(){
+
+        string values = "";
+        values += "name='" + Name + "',";
+        values += "time=" + NotifyTime.Ticks + ",";
+        values += "sun=" + GetBit(Weekdays[0]) + ",";
+        values += "mon=" + GetBit(Weekdays[1]) + ",";
+        values += "tue=" + GetBit(Weekdays[2]) + ",";
+        values += "wed=" + GetBit(Weekdays[3]) + ",";
+        values += "thu=" + GetBit(Weekdays[4]) + ",";
+        values += "fri=" + GetBit(Weekdays[5]) + ",";
+        values += "sat=" + GetBit(Weekdays[6]) + ",";
+        values += "active=" + GetBit(Active) + ",";
+        values += "stars=" + Stars + ",";
+        values += "color=" + Color + ",";
+        values += "shape=" + Shape;
+
+        return values;
+
     }
 
 }
