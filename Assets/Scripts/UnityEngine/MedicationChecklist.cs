@@ -8,11 +8,11 @@ public class MedicationChecklist : MonoBehaviour
     public MedicationController controller;
     public GameObject itemTemplate;
     public Transform contentWindow;
-    private List<GameObject> items;
+    private ObjectPool items;
     public bool showTaken = false;
 
     public void Setup() {
-        items = new List<GameObject>();
+        items = new ObjectPool(itemTemplate);
         Refresh();
     }
     
@@ -21,25 +21,19 @@ public class MedicationChecklist : MonoBehaviour
         // we are pooling checklist items as game objects
         // that way, we are not constantly destroying or creating objects
 
-        // set all existing items inactive
-        for(int i = 0; i < items.Count; i++){
-            items[i].SetActive(false);
-        }
+        items.Clear();
 
         List<Medication> meds = controller.GetMedicationsScheduledToday();
 
         // for each dose:
+        GameObject go;
         for(int i = 0; i < meds.Count; i++){
 
-            // if we have run out of pooled objects, create a new one
-            if(i >= items.Count){
-                items.Add(GameObject.Instantiate(itemTemplate));
-                items[i].transform.SetParent(contentWindow);
-            }
-
-            // set the object active and refresh it with data from controller
-            items[i].SetActive(true);
-            MedicationItem mi = items[i].GetComponent<MedicationItem>();
+            // retrieve pool object and refresh it with data from controller
+            go = items.GetObject();
+            go.transform.SetParent(contentWindow);
+            go.transform.SetAsLastSibling();
+            MedicationItem mi = go.GetComponent<MedicationItem>();
             mi.Refresh(controller, meds[i]);
 
         }

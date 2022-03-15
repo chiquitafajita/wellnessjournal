@@ -10,11 +10,11 @@ public class MedicationList : MonoBehaviour
     public MedicationEditor editor;
     public GameObject itemTemplate;
     public Transform contentWindow;
-    private List<GameObject> items;
     private List<Medication> meds;
+    private ObjectPool items;
 
     public void Setup(){
-        items = new List<GameObject>();
+        items = new ObjectPool(itemTemplate);
         Refresh();
     }
 
@@ -22,22 +22,18 @@ public class MedicationList : MonoBehaviour
 
         meds = controller.GetAllMedications();
 
-        foreach(GameObject go in items)
-            go.SetActive(false);
+        items.Clear();
 
         // for each dose:
+        GameObject go;
         for(int i = 0; i < meds.Count; i++){
 
-            // if we have run out of pooled objects, create a new one
-            if(i >= items.Count){
-                items.Add(GameObject.Instantiate(itemTemplate));
-                items[i].transform.SetParent(contentWindow);
-                items[i].transform.localScale = Vector3.one;
-            }
-
-            // set the object active and refresh it with data from controller
-            items[i].SetActive(true);
-            MedicationRecord mi = items[i].GetComponent<MedicationRecord>();
+            // get object from pool
+            go = items.GetObject();
+            go.transform.SetParent(contentWindow);
+            go.transform.SetAsLastSibling();
+            go.transform.localScale = Vector3.one;
+            MedicationRecord mi = go.GetComponent<MedicationRecord>();
             mi.Refresh(this, meds[i]);
 
         }

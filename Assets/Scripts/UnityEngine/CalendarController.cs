@@ -14,15 +14,16 @@ public class CalendarController : MonoBehaviour
     public Transform calendarGrid;
     public Text monthLabel;
 
-    private List<GameObject> blanks;
-    private List<GameObject> days;
     private DateTime current;
+
+    private ObjectPool blanks;
+    private ObjectPool days;
 
     // Start is called before the first frame update
     void Awake() {
 
-        days = new List<GameObject>();
-        blanks = new List<GameObject>();
+        days = new ObjectPool(dayTemplate);
+        blanks = new ObjectPool(blankTemplate);
         RefreshCalendar(TimeKeeper.GetDate());
         
     }
@@ -34,25 +35,19 @@ public class CalendarController : MonoBehaviour
 
         monthLabel.text = TimeKeeper.GetMonth(month) + " " + year;
 
-        foreach(GameObject obj in days){
-            obj.SetActive(false);
-        }
+        days.Clear();
+        blanks.Clear();
 
-        foreach(GameObject obj in blanks){
-            obj.SetActive(false);
-        }
+        GameObject go;
         
         // add blanks in first week of the month
         current = new DateTime(year, month, 1);
         for(int d = 0; d < (int)current.DayOfWeek; d++){
 
-            if(d >= blanks.Count){
-                blanks.Add(GameObject.Instantiate(blankTemplate));
-                blanks[d].transform.SetParent(calendarGrid);
-            }
-            
-            blanks[d].transform.SetAsLastSibling();
-            blanks[d].SetActive(true);
+            go = blanks.GetObject();
+            go.transform.SetParent(calendarGrid);
+            go.transform.SetAsLastSibling();
+            go.SetActive(true);
 
         }
 
@@ -61,14 +56,10 @@ public class CalendarController : MonoBehaviour
 
             current = new DateTime(year, month, i+1);
 
-            if(i >= days.Count){
-                days.Add(GameObject.Instantiate(dayTemplate));
-                days[i].transform.SetParent(calendarGrid);
-            }
-
-            days[i].SetActive(true);
-            days[i].transform.SetAsLastSibling();
-            CalendarDay cd = days[i].GetComponent<CalendarDay>();
+            go = days.GetObject();
+            go.transform.SetParent(calendarGrid);
+            go.transform.SetAsLastSibling();
+            CalendarDay cd = go.GetComponent<CalendarDay>();
             cd.Refresh(database, current, current == TimeKeeper.GetDate(), database.IsDayRecorded(current));
 
         }

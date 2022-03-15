@@ -107,22 +107,27 @@ public class DBController : MonoBehaviour
 
     public void LogMedications(DateTime date){
 
+        // get today's code
         string code = TimeKeeper.dayCodes[(int)date.DayOfWeek];
-
+        
+        // create list of ids
         List<int> ids = new List<int>();
 
+        // select all IDs of doses scheduled for weekday
         reader = dao.query("SELECT id FROM doses WHERE " + code + "=1 AND active=1;");
         while(reader.Read()){
             ids.Add(int.Parse(reader[0].ToString()));
         }
         reader.Close();
 
+        // log each scheduled dose
         foreach(int id in ids){
             LogMedication(id, date);
         }
 
     }
 
+    // log a dose for a given date
     public void LogMedication(int id, DateTime date){
 
         string dateCode = date.ToString("yyyy-MM-dd");
@@ -148,20 +153,8 @@ public class DBController : MonoBehaviour
 
     }
 
-    public List<int> GetDoseIDs(DateTime date){
-
-        List<int> ids = new List<int>();
-        string d = date.ToString("yyyy-MM-dd");
-        reader = dao.query("SELECT id FROM logs WHERE date='" + d + "';");
-        while(reader.Read()){
-            ids.Add(int.Parse(reader[0].ToString()));
-        }
-        reader.Close();
-        return ids;
-
-    }
-
-    public List<Medication> GetMedicationsForDay(DateTime date, bool showTakenDoses){
+    // get all medications scheduled for a day, according to logs
+    public List<Medication> GetDosesForDay(DateTime date, bool showTakenDoses){
 
         List<Medication> medications = new List<Medication>();
         string d = date.ToString("yyyy-MM-dd");
@@ -176,6 +169,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // get all dose IDs
     public List<Medication> GetAllMedications(){
 
         List<Medication> medications = new List<Medication>();
@@ -188,6 +182,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // get dose by ID
     public Medication GetMedication(int id){
 
         reader = dao.query("SELECT * FROM doses WHERE id=" + id + ";");
@@ -208,6 +203,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // get status of dose on a given day
     public int GetLogStatus(int id, DateTime date){
 
         string d = date.ToString("yyyy-MM-dd");
@@ -218,6 +214,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // get letter grade of a day based on average of log scores
     public char GetDayGrade(DateTime date){
 
         string d = date.ToString("yyyy-MM-dd");
@@ -242,6 +239,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // update medication in database
     public void UpdateMedication(Medication medication){
 
         // get existing record
@@ -275,6 +273,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // delete medication from database and remove all associated logs
     public void DeleteMedication(Medication medication){
 
         reader = dao.query("DELETE FROM doses WHERE id=" + medication.ID + ";");
@@ -285,12 +284,15 @@ public class DBController : MonoBehaviour
 
     }
 
+    // check if day is in database
+    // (we have recorded all days after the earliest)
     public bool IsDayRecorded(DateTime date){
 
         return date >= GetEarliestDate() && date <= TimeKeeper.GetDate();
 
     }
 
+    // get earliest date in database
     public DateTime GetEarliestDate(){
 
         reader = dao.query("SELECT min(date) FROM dates;");
@@ -301,6 +303,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // get day rating in database
     public int GetDayRating(DateTime date){
 
         string d = date.ToString("yyyy-MM-dd");

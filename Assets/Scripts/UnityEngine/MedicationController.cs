@@ -65,7 +65,7 @@ public class MedicationController : MonoBehaviour
 
     public List<Medication> GetMedicationsScheduledToday(){
 
-        return database.GetMedicationsForDay(TimeKeeper.GetDate(), showTakenDoses);
+        return database.GetDosesForDay(TimeKeeper.GetDate(), showTakenDoses);
 
     }
 
