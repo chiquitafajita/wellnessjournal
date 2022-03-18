@@ -43,12 +43,12 @@ public class MedicationEditor : MonoBehaviour
         ifPM = medication.NotifyTime.Hours > 11;
 
         // refresh GUI
-        RefreshGUI();
+        Refresh();
         
 
     }
 
-    public void RefreshGUI(){
+    public void Refresh(){
 
         medName.text = medication.Name;
         int hour = medication.NotifyTime.Hours;
@@ -105,7 +105,7 @@ public class MedicationEditor : MonoBehaviour
         TimeSpan newNotify = new TimeSpan(hour, min, 0);
         medication.NotifyTime = newNotify;
         medication.Name = medName.text;
-        RefreshGUI();
+        Refresh();
 
     }
 

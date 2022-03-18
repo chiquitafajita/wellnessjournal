@@ -8,16 +8,25 @@ public class MedicationController : MonoBehaviour
     public DBController database;
     public MedicationChecklist checklist;
     public MedicationList listAll;
+    public DayRater dayRater;
+    public TagWriter tags;
+    public CalendarController calendar;
     public bool showTakenDoses = false;
 
     private void Awake() {
+        calendar.Setup();
         checklist.Setup();
         listAll.Setup();
+        dayRater.Refresh();
+        tags.Refresh();
     }
 
     public void Refresh(){
+        calendar.Refresh();
         checklist.Refresh();
         listAll.Refresh();
+        dayRater.Refresh();
+        tags.Refresh();
     }
 
     public void AddMedication(Medication medication){

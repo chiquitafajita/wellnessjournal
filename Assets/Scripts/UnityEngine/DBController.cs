@@ -82,7 +82,7 @@ public class DBController : MonoBehaviour
                     Debug.Log("Creating record for " + code);
 
                     // insert missing day into database and log medications
-                    dao.query("INSERT INTO dates (date, rating, tags) VALUES ('" + code + "',0,'');").Close();
+                    dao.query("INSERT INTO dates (date, rating, tags) VALUES ('" + code + "',3,'');").Close();
                     LogMedications(prev);
 
                 }
@@ -303,6 +303,14 @@ public class DBController : MonoBehaviour
 
     }
 
+    public void UpdateDayRating(DateTime date, int rating){
+
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("UPDATE dates SET rating=" + rating + " WHERE date='" + d + "';");
+        reader.Close();
+        
+    }
+
     // get day rating in database
     public int GetDayRating(DateTime date){
 
@@ -317,6 +325,24 @@ public class DBController : MonoBehaviour
         }
         reader.Close();
         return rating;
+
+    }
+
+    public void UpdateDayTags(DateTime date, string tags){
+
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("UPDATE dates SET tags='" + tags + "' WHERE date='" + d + "';");
+        reader.Close();
+
+    }
+
+    public string GetDayTags(DateTime date){
+
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT tags FROM dates WHERE date='" + d + "';");
+        string tags = reader[0].ToString();
+        reader.Close();
+        return tags;
 
     }
 

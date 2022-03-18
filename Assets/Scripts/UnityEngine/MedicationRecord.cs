@@ -9,6 +9,7 @@ public class MedicationRecord : MonoBehaviour
     public Text nameLabel;
     public Text timeLabel;
     public Toggle[] stars;
+    public Text[] weekdays;
     private int id;
 
     private MedicationEditor editor;
@@ -43,6 +44,10 @@ public class MedicationRecord : MonoBehaviour
         for(int s = 0; s < 3; s++){
             stars[s].isOn = s < med.Stars;
             stars[s].interactable = false;
+        }
+
+        for(int d = 0; d < 7; d++){
+            weekdays[d].color = med.Weekdays[d] ? Color.white : new Color(0, 0, 0, 0.75F);
         }
 
     }

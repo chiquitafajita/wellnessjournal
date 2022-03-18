@@ -6,28 +6,23 @@ using UnityEngine.UI;
 public class TagWriter : MonoBehaviour
 {
 
-    public Text input;
+    public MedicationController controller;
     public Text output;
+    public InputField inputField;
+    public DBController database;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public void Refresh(){
+
+        string db = database.GetDayTags(TimeKeeper.GetDate());
+        output.text = string.IsNullOrEmpty(db) ? "You have recorded no tags today." : db;
+        inputField.text = db;
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public void SetTags(){
 
-    public void UpdateTagDisplay(){
-
-        string tags = input.text;
-        if(string.IsNullOrEmpty(tags))
-            output.text = "You have recorded no tags today.";
-        else
-            output.text = tags;
+        database.UpdateDayTags(TimeKeeper.GetDate(), inputField.text);
+        controller.Refresh();
 
     }
 

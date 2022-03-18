@@ -32,6 +32,8 @@ public class ObjectPool
             go.SetActive(false);
         }
 
+        used = -1;
+
     }
 
     // retrieve an object from the pool

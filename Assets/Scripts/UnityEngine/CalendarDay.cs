@@ -16,7 +16,7 @@ public class CalendarDay : MonoBehaviour
 
     private DBController database;
 
-    public void Refresh(DBController database, DateTime date, bool isToday, bool exists){
+    public void Refresh(DBController database, DateTime date, bool isToday, bool exists, int mode){
 
         this.database = database;
         this.date = date;
@@ -24,7 +24,19 @@ public class CalendarDay : MonoBehaviour
         dateLabel.text = date.Day + "";
         dayButton.interactable = exists;
         if(exists){
-            dateLabel.text = "" + database.GetDayGrade(date);
+            
+            switch(mode){
+                case 1:
+                    dateLabel.text = database.GetDayRating(date) + "";
+                    break;
+                case 2:
+                    dateLabel.text = database.GetDayGrade(date) + "";
+                    break;
+                default:
+                    dateLabel.text = date.Day + "";
+                    break;
+            }
+            
             // rating.enabled = true;
             // switch(database.GetDayRating(date)){
             //     case -2:

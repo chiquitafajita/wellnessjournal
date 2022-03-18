@@ -19,16 +19,24 @@ public class CalendarController : MonoBehaviour
     private ObjectPool blanks;
     private ObjectPool days;
 
+    private int mode;   // 0 = dates, 1 = moods, 2 = scores
+
     // Start is called before the first frame update
-    void Awake() {
+    public void Setup() {
 
         days = new ObjectPool(dayTemplate);
         blanks = new ObjectPool(blankTemplate);
-        RefreshCalendar(TimeKeeper.GetDate());
+        Refresh(TimeKeeper.GetDate());
         
     }
 
-    public void RefreshCalendar(DateTime includedDate){
+    public void Refresh(){
+
+        Refresh(current);
+
+    }
+
+    public void Refresh(DateTime includedDate){
 
         int year = includedDate.Year;
         int month = includedDate.Month;
@@ -60,7 +68,7 @@ public class CalendarController : MonoBehaviour
             go.transform.SetParent(calendarGrid);
             go.transform.SetAsLastSibling();
             CalendarDay cd = go.GetComponent<CalendarDay>();
-            cd.Refresh(database, current, current == TimeKeeper.GetDate(), database.IsDayRecorded(current));
+            cd.Refresh(database, current, current == TimeKeeper.GetDate(), database.IsDayRecorded(current), mode);
 
         }
 
@@ -75,14 +83,21 @@ public class CalendarController : MonoBehaviour
     public void GoToLastMonth(){
 
         DateTime last = new DateTime(current.Year, current.Month, 1).AddMonths(-1);
-        RefreshCalendar(last);
+        Refresh(last);
 
     }
 
     public void GoToNextMonth(){
 
         DateTime next = new DateTime(current.Year, current.Month, 1).AddMonths(1);
-        RefreshCalendar(next);
+        Refresh(next);
+
+    }
+
+    public void SetMode(int mode){
+
+        this.mode = mode;
+        Refresh(current);
 
     }
 
