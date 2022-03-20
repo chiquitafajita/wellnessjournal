@@ -12,7 +12,7 @@ public class WeekLabels : MonoBehaviour
     void Start()
     {
         
-        date.text = TimeKeeper.GetMonth() + " " + TimeKeeper.GetDay() + ", " + TimeKeeper.GetYear();
+        date.text = TimeKeeper.GetMonth() + " " + TimeKeeper.GetDay();
 
         for(int d = 0; d < 7; d++){
             dayLabelsOff[d].SetActive(d != TimeKeeper.GetDayOfWeek());

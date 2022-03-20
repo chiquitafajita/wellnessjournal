@@ -13,6 +13,7 @@ public class MedicationEditor : MonoBehaviour
     public GameObject amToggle;
     public GameObject pmToggle;
     public GameObject[] starOns;
+    public GameObject tabs;
     public Toggle[] weekdays;
     public bool ifPM;   // true if PM, false if AM
 
@@ -31,6 +32,8 @@ public class MedicationEditor : MonoBehaviour
     // if index == -1, a new medication will be created
     // otherwise, the medication at the index will be accessed
     public void Open(GameObject referrer, int id){
+
+        tabs.SetActive(false);
 
         this.referrer = referrer;
         referrer.SetActive(false);
@@ -119,6 +122,7 @@ public class MedicationEditor : MonoBehaviour
         controller.Refresh();
         referrer.SetActive(true);
         menu.SetActive(false);
+        tabs.SetActive(true);
 
     }
 

@@ -303,6 +303,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // update day rating with number 1-5 (default is 3)
     public void UpdateDayRating(DateTime date, int rating){
 
         string d = date.ToString("yyyy-MM-dd");
@@ -328,6 +329,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // replace day's microjournal
     public void UpdateDayTags(DateTime date, string tags){
 
         string d = date.ToString("yyyy-MM-dd");
@@ -336,6 +338,7 @@ public class DBController : MonoBehaviour
 
     }
 
+    // get day's microjournal
     public string GetDayTags(DateTime date){
 
         string d = date.ToString("yyyy-MM-dd");

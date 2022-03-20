@@ -12,13 +12,11 @@ public class MedicationRecord : MonoBehaviour
     public Text[] weekdays;
     private int id;
 
-    private MedicationEditor editor;
     private MedicationList list;
 
     public void Refresh(MedicationList list, Medication med){
 
         this.list = list;
-        editor = list.editor;
         id = med.ID;
         nameLabel.text = med.Name;
         TimeSpan time = med.NotifyTime;
@@ -54,7 +52,7 @@ public class MedicationRecord : MonoBehaviour
 
     public void ClickSelf(){
 
-        editor.Open(list.menu, id);
+        list.EditMedication(id);
 
     }
 
