@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class DayRater : MonoBehaviour
 {
@@ -10,9 +11,12 @@ public class DayRater : MonoBehaviour
     public DBController database;
     public GameObject[] starOns;
 
-    public void Refresh(){
+    private DateTime date;
 
-        int rating = database.GetDayRating(TimeKeeper.GetDate());
+    public void Refresh(DateTime date){
+
+        this.date = date;
+        int rating = database.GetDayRating(date);
         for(int s = 0; s < 5; s++){
             starOns[s].SetActive(s < rating);
         }
@@ -21,7 +25,8 @@ public class DayRater : MonoBehaviour
 
     public void ChangeRating(int rating){
 
-        database.UpdateDayRating(TimeKeeper.GetDate(), rating);
+        database.UpdateDayRating(date, rating);
+        Refresh(date);
         controller.Refresh();
 
     }

@@ -11,6 +11,7 @@ public class CalendarController : MonoBehaviour
     public DBController database;
     public GameObject dayTemplate;
     public GameObject blankTemplate;
+    public PreviousDayView previousDayView;
     public Transform calendarGrid;
     public Text monthLabel;
 
@@ -68,7 +69,7 @@ public class CalendarController : MonoBehaviour
             go.transform.SetParent(calendarGrid);
             go.transform.SetAsLastSibling();
             CalendarDay cd = go.GetComponent<CalendarDay>();
-            cd.Refresh(database, current, current == TimeKeeper.GetDate(), database.IsDayRecorded(current), mode);
+            cd.Refresh(this, current, GetDayLabel(current), database.IsDayRecorded(current));
 
         }
 
@@ -82,15 +83,13 @@ public class CalendarController : MonoBehaviour
 
     public void GoToLastMonth(){
 
-        DateTime last = new DateTime(current.Year, current.Month, 1).AddMonths(-1);
-        Refresh(last);
+        Refresh(new DateTime(current.Year, current.Month, 1).AddMonths(-1));
 
     }
 
     public void GoToNextMonth(){
 
-        DateTime next = new DateTime(current.Year, current.Month, 1).AddMonths(1);
-        Refresh(next);
+        Refresh(new DateTime(current.Year, current.Month, 1).AddMonths(1));
 
     }
 
@@ -98,6 +97,39 @@ public class CalendarController : MonoBehaviour
 
         this.mode = mode;
         Refresh(current);
+
+    }
+
+    public string GetDayLabel(DateTime date){
+
+        // default is day of month
+        string output = date.Day + "";
+
+        // if day exists in database
+        if(database.IsDayRecorded(current)){
+            
+            switch(mode){
+
+                // get mood/vibes/etc rating
+                case 1:
+                    output = database.GetDayRating(date) + "";
+                    break;
+
+                // get dose consistency grade
+                case 2:
+                    output = database.GetDayGrade(date) + "";
+                    break;
+            }
+            
+        }
+
+        return output;
+
+    }
+
+    public void ViewPreviousDay(DateTime date){
+
+        previousDayView.ViewDay(date);
 
     }
 

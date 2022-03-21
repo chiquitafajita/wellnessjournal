@@ -23,7 +23,7 @@ public class MedicationChecklist : MonoBehaviour
 
         items.Clear();
 
-        List<Medication> meds = controller.GetMedicationsScheduledToday();
+        List<Medication> meds = controller.GetMedicationsScheduledForDate(TimeKeeper.GetDate());
 
         // for each dose:
         GameObject go;

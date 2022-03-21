@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MedicationController : MonoBehaviour
 {
@@ -17,16 +18,16 @@ public class MedicationController : MonoBehaviour
         calendar.Setup();
         checklist.Setup();
         listAll.Setup();
-        dayRater.Refresh();
-        tags.Refresh();
+        dayRater.Refresh(TimeKeeper.GetDate());
+        tags.Refresh(TimeKeeper.GetDate());
     }
 
     public void Refresh(){
         calendar.Refresh();
         checklist.Refresh();
         listAll.Refresh();
-        dayRater.Refresh();
-        tags.Refresh();
+        dayRater.Refresh(TimeKeeper.GetDate());
+        tags.Refresh(TimeKeeper.GetDate());
     }
 
     public void AddMedication(Medication medication){
@@ -72,9 +73,9 @@ public class MedicationController : MonoBehaviour
 
     }
 
-    public List<Medication> GetMedicationsScheduledToday(){
+    public List<Medication> GetMedicationsScheduledForDate(DateTime date){
 
-        return database.GetDosesForDay(TimeKeeper.GetDate(), showTakenDoses);
+        return database.GetDosesForDay(date, showTakenDoses);
 
     }
 

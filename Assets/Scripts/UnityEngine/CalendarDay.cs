@@ -14,59 +14,23 @@ public class CalendarDay : MonoBehaviour
     
     private DateTime date;
 
-    private DBController database;
+    private CalendarController calendar;
 
-    public void Refresh(DBController database, DateTime date, bool isToday, bool exists, int mode){
+    public void Refresh(CalendarController calendar, DateTime date, String label, bool exists){
 
-        this.database = database;
+        this.calendar = calendar;
         this.date = date;
 
-        dateLabel.text = date.Day + "";
         dayButton.interactable = exists;
-        if(exists){
-            
-            switch(mode){
-                case 1:
-                    dateLabel.text = database.GetDayRating(date) + "";
-                    break;
-                case 2:
-                    dateLabel.text = database.GetDayGrade(date) + "";
-                    break;
-                default:
-                    dateLabel.text = date.Day + "";
-                    break;
-            }
-            
-            // rating.enabled = true;
-            // switch(database.GetDayRating(date)){
-            //     case -2:
-            //         rating.color = Color.red;
-            //         break;
-                    
-            //     case -1:
-            //         rating.color = new Color(1, .646F, 0);
-            //         break;
-                    
-            //     case 0:
-            //         rating.color = Color.yellow;
-            //         break;
-                    
-            //     case 1:
-            //         rating.color = Color.green;
-            //         break;
-                    
-            //     case 2:
-            //         rating.color = Color.blue;
-            //         break;
-                    
-            // }
+        dateLabel.text = label;
 
-        }
-        else{
-            //rating.enabled = false;
-        }
+        todayIndicator.gameObject.SetActive(date == TimeKeeper.GetDate());
 
-        todayIndicator.gameObject.SetActive(isToday);
+    }
+
+    public void ClickSelf(){
+
+        calendar.ViewPreviousDay(date);
 
     }
 
