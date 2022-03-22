@@ -16,7 +16,12 @@ public class DayRater : MonoBehaviour
     public void Refresh(DateTime date){
 
         this.date = date;
-        int rating = database.GetDayRating(date);
+        RefreshAppearance(database.GetDayRating(date));
+
+    }
+
+    private void RefreshAppearance(int rating){
+
         for(int s = 0; s < 5; s++){
             starOns[s].SetActive(s < rating);
         }
@@ -25,9 +30,9 @@ public class DayRater : MonoBehaviour
 
     public void ChangeRating(int rating){
 
+        RefreshAppearance(rating);
         database.UpdateDayRating(date, rating);
-        Refresh(date);
-        controller.Refresh();
+        //controller.Refresh();
 
     }
 

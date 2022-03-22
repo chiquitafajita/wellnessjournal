@@ -30,7 +30,7 @@ public class MedicationChecklist : MonoBehaviour
         for(int i = 0; i < meds.Count; i++){
 
             // retrieve pool object and refresh it with data from controller
-            go = items.GetObject();
+            go = items.CreateNew();
             go.transform.SetParent(contentWindow);
             go.transform.SetAsLastSibling();
             MedicationItem mi = go.GetComponent<MedicationItem>();

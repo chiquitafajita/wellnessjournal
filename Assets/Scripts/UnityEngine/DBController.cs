@@ -33,16 +33,11 @@ public class DBController : MonoBehaviour
     // create tables if DNE: doses, daily records, logs
     private void CreateTables(){
 
-        string command;
+        dao.command("CREATE TABLE IF NOT EXISTS doses (id INTEGER PRIMARY KEY, name VARCHAR(255), time BIGINT, sun BOOL, mon BOOL, tue BOOL, wed BOOL, thu BOOL, fri BOOL, sat BOOL, active BOOL, stars INT, color INT, shape INT);");
 
-        command = "CREATE TABLE IF NOT EXISTS doses (id INTEGER PRIMARY KEY, name VARCHAR(255), time BIGINT, sun BOOL, mon BOOL, tue BOOL, wed BOOL, thu BOOL, fri BOOL, sat BOOL, active BOOL, stars INT, color INT, shape INT);";
-        dao.query(command).Close();
+        dao.command("CREATE TABLE IF NOT EXISTS dates (date DATE PRIMARY KEY, rating INTEGER, tags VARCHAR(512));");
 
-        command = "CREATE TABLE IF NOT EXISTS dates (date DATE PRIMARY KEY, rating INTEGER, tags VARCHAR(512));";
-        dao.query(command).Close();
-
-        command = "CREATE TABLE IF NOT EXISTS logs (date DATE, id INTEGER, status INTEGER, PRIMARY KEY(date, id));";
-        dao.query(command).Close();
+        dao.command("CREATE TABLE IF NOT EXISTS logs (date DATE, id INTEGER, status INTEGER, PRIMARY KEY(date, id));");
 
     }
 
@@ -82,7 +77,7 @@ public class DBController : MonoBehaviour
                     Debug.Log("Creating record for " + code);
 
                     // insert missing day into database and log medications
-                    dao.query("INSERT INTO dates (date, rating, tags) VALUES ('" + code + "',3,'');").Close();
+                    dao.command("INSERT INTO dates (date, rating, tags) VALUES ('" + code + "',3,'');");
                     LogMedications(prev);
 
                 }
@@ -96,7 +91,7 @@ public class DBController : MonoBehaviour
         else{
             
             string code = today.ToString("yyyy-MM-dd");
-            dao.query("INSERT INTO dates (date, rating, tags) VALUES ('" + code + "',0,'');").Close();
+            dao.command("INSERT INTO dates (date, rating, tags) VALUES ('" + code + "',0,'');");
         }
 
         
@@ -131,17 +126,14 @@ public class DBController : MonoBehaviour
     public void LogMedication(int id, DateTime date){
 
         string dateCode = date.ToString("yyyy-MM-dd");
-        reader = dao.query("INSERT OR IGNORE INTO logs (id, date, status) VALUES (" + id + ",'" + dateCode + "',0);");
-        reader.Close();
+        dao.command("INSERT OR IGNORE INTO logs (id, date, status) VALUES (" + id + ",'" + dateCode + "',0);");
 
     }
 
     // insert medication into database; returns ID
     public int InsertMedication(Medication medication){
         
-        string command = "INSERT INTO doses " + medication.GetSqlColumns() + " VALUES " + medication.GetSqlValues() + ";";
-        reader = dao.query(command);
-        reader.Close();
+        dao.command("INSERT INTO doses " + medication.GetSqlColumns() + " VALUES " + medication.GetSqlValues() + ";");
 
         reader = dao.query("SELECT MAX(id) FROM doses");
         int id = int.Parse(reader[0].ToString());
@@ -198,8 +190,7 @@ public class DBController : MonoBehaviour
     public void ChangeLogStatus(int id, DateTime date, int status){
 
         string d = date.ToString("yyyy-MM-dd");
-        reader = dao.query("UPDATE logs SET status=" + status + " WHERE id=" + id + " AND date='" + d + "';");
-        reader.Close();
+        dao.command("UPDATE logs SET status=" + status + " WHERE id=" + id + " AND date='" + d + "';");
 
     }
 
@@ -246,9 +237,7 @@ public class DBController : MonoBehaviour
         Medication oldRecord = GetMedication(medication.ID);
 
         // update record
-        string query = "UPDATE doses SET " + medication.GetUpdate() + " WHERE id=" + medication.ID + ";";
-        reader = dao.query(query);
-        reader.Close();
+        dao.command("UPDATE doses SET " + medication.GetUpdate() + " WHERE id=" + medication.ID + ";");
 
         // get current day of week
         int dayOfWeek = TimeKeeper.GetDayOfWeek();
@@ -265,8 +254,7 @@ public class DBController : MonoBehaviour
 
             // otherwise, delete the log scheduled for today
             else{
-                reader = dao.query("DELETE FROM logs WHERE id=" + medication.ID + " AND date='" + d + "';");
-                reader.Close();
+                dao.command("DELETE FROM logs WHERE id=" + medication.ID + " AND date='" + d + "';");
             }
 
         }
@@ -276,11 +264,9 @@ public class DBController : MonoBehaviour
     // delete medication from database and remove all associated logs
     public void DeleteMedication(Medication medication){
 
-        reader = dao.query("DELETE FROM doses WHERE id=" + medication.ID + ";");
-        reader.Close();
+        dao.command("DELETE FROM doses WHERE id=" + medication.ID + ";");
 
-        reader = dao.query("DELETE FROM logs WHERE id=" + medication.ID + ";");
-        reader.Close();
+        dao.command("DELETE FROM logs WHERE id=" + medication.ID + ";");
 
     }
 
@@ -307,8 +293,7 @@ public class DBController : MonoBehaviour
     public void UpdateDayRating(DateTime date, int rating){
 
         string d = date.ToString("yyyy-MM-dd");
-        reader = dao.query("UPDATE dates SET rating=" + rating + " WHERE date='" + d + "';");
-        reader.Close();
+        dao.command("UPDATE dates SET rating=" + rating + " WHERE date='" + d + "';");
         
     }
 
@@ -333,8 +318,7 @@ public class DBController : MonoBehaviour
     public void UpdateDayTags(DateTime date, string tags){
 
         string d = date.ToString("yyyy-MM-dd");
-        reader = dao.query("UPDATE dates SET tags='" + tags + "' WHERE date='" + d + "';");
-        reader.Close();
+        dao.command("UPDATE dates SET tags='" + tags + "' WHERE date='" + d + "';");
 
     }
 

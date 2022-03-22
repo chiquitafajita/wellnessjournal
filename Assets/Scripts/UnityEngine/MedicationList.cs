@@ -29,7 +29,7 @@ public class MedicationList : MonoBehaviour
         for(int i = 0; i < meds.Count; i++){
 
             // get object from pool
-            go = items.GetObject();
+            go = items.CreateNew();
             go.transform.SetParent(contentWindow);
             go.transform.SetAsLastSibling();
             go.transform.localScale = Vector3.one;

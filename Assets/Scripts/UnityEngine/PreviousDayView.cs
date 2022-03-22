@@ -52,7 +52,7 @@ public class PreviousDayView : MonoBehaviour
         pool.Clear();
         for(int i = 0; i < meds.Count; i++){
 
-            GameObject go = pool.GetObject();
+            GameObject go = pool.CreateNew();
             go.transform.SetParent(contentGrid);
             go.transform.SetAsLastSibling();
             go.transform.localScale = Vector3.one;

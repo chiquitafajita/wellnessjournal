@@ -37,7 +37,7 @@ public class ObjectPool
     }
 
     // retrieve an object from the pool
-    public GameObject GetObject(){
+    public GameObject CreateNew(){
 
         used++;
 
@@ -49,6 +49,12 @@ public class ObjectPool
         // set 'active' to true and return object
         objects[used].SetActive(true);
         return objects[used];
+
+    }
+
+    public List<GameObject> GetObjects(){
+
+        return objects;
 
     }
 

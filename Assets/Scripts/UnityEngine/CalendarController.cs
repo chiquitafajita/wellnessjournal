@@ -53,7 +53,7 @@ public class CalendarController : MonoBehaviour
         current = new DateTime(year, month, 1);
         for(int d = 0; d < (int)current.DayOfWeek; d++){
 
-            go = blanks.GetObject();
+            go = blanks.CreateNew();
             go.transform.SetParent(calendarGrid);
             go.transform.SetAsLastSibling();
             go.SetActive(true);
@@ -65,7 +65,7 @@ public class CalendarController : MonoBehaviour
 
             current = new DateTime(year, month, i+1);
 
-            go = days.GetObject();
+            go = days.CreateNew();
             go.transform.SetParent(calendarGrid);
             go.transform.SetAsLastSibling();
             CalendarDay cd = go.GetComponent<CalendarDay>();

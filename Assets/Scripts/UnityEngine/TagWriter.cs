@@ -17,17 +17,22 @@ public class TagWriter : MonoBehaviour
     public void Refresh(DateTime date){
 
         this.date = date;
-        string db = database.GetDayTags(date);
-        output.text = string.IsNullOrEmpty(db) ? "You have recorded no tags today." : db;
-        inputField.text = db;
+        RefreshAppearance(database.GetDayTags(date));
+
+    }
+
+    private void RefreshAppearance(String tags){
+
+        output.text = string.IsNullOrEmpty(tags) ? "You have recorded no tags today." : tags;
+        inputField.text = tags;
 
     }
 
     public void SetTags(){
 
+        RefreshAppearance(inputField.text);
         database.UpdateDayTags(date, inputField.text);
-        Refresh(date);
-        controller.Refresh();
+        //controller.Refresh();
 
     }
 
