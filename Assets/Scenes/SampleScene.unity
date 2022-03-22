@@ -4121,7 +4121,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '    4-Week Mood:'
+  m_Text: '4-Week Mood:'
 --- !u!222 &299952919
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8512,6 +8512,10 @@ MonoBehaviour:
   previousDayView: {fileID: 1302309969}
   calendarGrid: {fileID: 1704259951}
   monthLabel: {fileID: 784677352}
+  weekGrade: {fileID: 876937858}
+  monthGrade: {fileID: 1648946986}
+  weekRating: {fileID: 1089830478}
+  monthRating: {fileID: 299952918}
 --- !u!1 &708035566
 GameObject:
   m_ObjectHideFlags: 0
@@ -10802,7 +10806,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '    1-Week Score:'
+  m_Text: '1-Week Score:'
 --- !u!222 &876937859
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14052,7 +14056,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '    1-Week Mood:'
+  m_Text: '1-Week Mood:'
 --- !u!222 &1089830479
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14131,7 +14135,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Daily Grades
+  m_Text: Dose Consistency
 --- !u!222 &1099262005
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14690,7 +14694,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Daily Moods
+  m_Text: 5-Star Ratings
 --- !u!222 &1182077437
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -21163,7 +21167,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '    4-Week Score:'
+  m_Text: '4-Week Score:'
 --- !u!222 &1648946987
 CanvasRenderer:
   m_ObjectHideFlags: 0

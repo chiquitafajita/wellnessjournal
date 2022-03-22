@@ -14,6 +14,10 @@ public class CalendarController : MonoBehaviour
     public PreviousDayView previousDayView;
     public Transform calendarGrid;
     public Text monthLabel;
+    public Text weekGrade;
+    public Text monthGrade;
+    public Text weekRating;
+    public Text monthRating;
 
     private DateTime current;
 
@@ -78,6 +82,11 @@ public class CalendarController : MonoBehaviour
 
         DateTime today = TimeKeeper.GetDate();
         nextMonth.interactable = includedDate.Month < today.Month || includedDate.Year < today.Year;
+
+        weekGrade.text = "Week Grade :  " + database.GetWeekGrade(today);
+        monthGrade.text = "Month Grade :  " + database.GetMonthGrade(today);
+        weekRating.text = "Week Rating :  " + Math.Round(database.GetWeekRating(today), 2) + " / 5";
+        monthRating.text = "Month Rating :  " + Math.Round(database.GetMonthRating(today), 2) + " / 5";
 
     }
 

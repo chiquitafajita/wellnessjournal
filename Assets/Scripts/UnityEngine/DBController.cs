@@ -230,6 +230,58 @@ public class DBController : MonoBehaviour
 
     }
 
+    // get average grade of past 7 days
+    public char GetWeekGrade(DateTime date){
+
+        date = date.AddDays(-7);
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT AVG(status) FROM logs WHERE date>'" + d + "';");
+        float average = String.IsNullOrEmpty(reader[0].ToString()) ? -1 : float.Parse(reader[0].ToString()) / 2;
+        reader.Close();
+
+        char grade = 'F';
+
+        if(average >= 0.9F)
+            grade = 'A';
+        else if(average >= 0.8F)
+            grade = 'B';
+        else if(average >= 0.7F)
+            grade = 'C';
+        else if(average >= 0.6F)
+            grade = 'D';
+        else if(average == -1)
+            grade = '-';
+
+        return grade;
+
+    }
+
+    // get average grade of past 28 days
+    public char GetMonthGrade(DateTime date){
+
+        date = date.AddDays(-28);
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT AVG(status) FROM logs WHERE date>'" + d + "';");
+        float average = String.IsNullOrEmpty(reader[0].ToString()) ? -1 : float.Parse(reader[0].ToString()) / 2;
+        reader.Close();
+
+        char grade = 'F';
+
+        if(average >= 0.9F)
+            grade = 'A';
+        else if(average >= 0.8F)
+            grade = 'B';
+        else if(average >= 0.7F)
+            grade = 'C';
+        else if(average >= 0.6F)
+            grade = 'D';
+        else if(average == -1)
+            grade = '-';
+
+        return grade;
+
+    }
+
     // update medication in database
     public void UpdateMedication(Medication medication){
 
@@ -305,6 +357,42 @@ public class DBController : MonoBehaviour
         int rating = 0;
         try{
             rating = int.Parse(reader[0].ToString());
+        }
+        catch(FormatException e){
+            Debug.LogWarning("Wrong Format: " + reader[0].ToString() + "\n" + e);
+        }
+        reader.Close();
+        return rating;
+
+    }
+
+    // get week rating in database as average of last 7 days
+    public float GetWeekRating(DateTime date){
+
+        date = date.AddDays(-7);
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT AVG(rating) FROM dates WHERE date>'" + d + "';");
+        float rating = 0;
+        try{
+            rating = float.Parse(reader[0].ToString());
+        }
+        catch(FormatException e){
+            Debug.LogWarning("Wrong Format: " + reader[0].ToString() + "\n" + e);
+        }
+        reader.Close();
+        return rating;
+
+    }
+
+    // get month rating in database as average of last 28 days
+    public float GetMonthRating(DateTime date){
+
+        date = date.AddDays(-28);
+        string d = date.ToString("yyyy-MM-dd");
+        reader = dao.query("SELECT AVG(rating) FROM dates WHERE date>'" + d + "';");
+        float rating = 0;
+        try{
+            rating = float.Parse(reader[0].ToString());
         }
         catch(FormatException e){
             Debug.LogWarning("Wrong Format: " + reader[0].ToString() + "\n" + e);
