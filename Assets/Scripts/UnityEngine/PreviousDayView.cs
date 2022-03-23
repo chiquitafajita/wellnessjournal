@@ -12,13 +12,12 @@ public class PreviousDayView : MonoBehaviour
     public TagWriter pastTags;
     public DayRater pastRating;
 
-    public Button lastDay;
+    public Button prevDay;
     public Button nextDay;
     public Text dayLabel;
 
-    public GameObject calendar;
     public GameObject menu;
-    public GameObject tabs;
+    public GameObject main;
 
     public Transform contentGrid;
     
@@ -29,23 +28,27 @@ public class PreviousDayView : MonoBehaviour
     
     public void ViewDay(DateTime date){
 
+        // if pool is null, create
         if(pool == null)
             pool = new ObjectPool(itemTemplate);
 
+        // set date and refresh persistent UI objects
         this.date = date;
         pastRating.Refresh(date);
         pastTags.Refresh(date);
 
+        // display date
         dayLabel.text = TimeKeeper.GetMonth(date.Month) + " " + date.Day;
 
+        // only enable "prev day" button if this is not the first day
         DateTime earliest = database.GetEarliestDate();
-        lastDay.interactable = date > earliest;
+        prevDay.interactable = date > earliest;
 
+        // only enable "next day" button if this is not the last day
         DateTime today = TimeKeeper.GetDate();
         nextDay.interactable = date < today;
 
-        calendar.SetActive(false);
-        tabs.SetActive(false);
+        main.SetActive(false);
         menu.SetActive(true);
 
         List<Medication> meds = database.GetDosesForDay(date, true);
@@ -66,22 +69,19 @@ public class PreviousDayView : MonoBehaviour
 
     public void LastDay(){
 
-        Debug.Log("Click");
         ViewDay(date.AddDays(-1));
 
     }
 
     public void NextDay(){
 
-        Debug.Log("Click");
         ViewDay(date.AddDays(1));
 
     }
 
     public void Close(){
 
-        calendar.SetActive(true);
-        tabs.SetActive(true);
+        main.SetActive(true);
         menu.SetActive(false);
         controller.Refresh();
 

@@ -35,12 +35,14 @@ public class CalendarController : MonoBehaviour
         
     }
 
+    // refresh calendar assuming same date
     public void Refresh(){
 
         Refresh(current);
 
     }
 
+    // refresh calendar view with given date
     public void Refresh(DateTime includedDate){
 
         int year = includedDate.Year;
@@ -73,35 +75,40 @@ public class CalendarController : MonoBehaviour
             go.transform.SetParent(calendarGrid);
             go.transform.SetAsLastSibling();
             CalendarDay cd = go.GetComponent<CalendarDay>();
-            cd.Refresh(this, current, GetDayLabel(current), database.IsDayRecorded(current));
+            cd.Refresh(this, current, GetDayLabel(current, mode), database.IsDayRecorded(current));
 
         }
 
+        // only enable "prev month" button if this is not the earliest month
         DateTime earliest = database.GetEarliestDate();
         lastMonth.interactable = includedDate.Month > earliest.Month || includedDate.Year > earliest.Year;
 
+        // only enable "next month" button if this is not the most recent month
         DateTime today = TimeKeeper.GetDate();
         nextMonth.interactable = includedDate.Month < today.Month || includedDate.Year < today.Year;
 
-        weekGrade.text = "Week Grade :  " + database.GetWeekGrade(today);
-        monthGrade.text = "Month Grade :  " + database.GetMonthGrade(today);
-        weekRating.text = "Week Rating :  " + Math.Round(database.GetWeekRating(today), 2) + " / 5";
-        monthRating.text = "Month Rating :  " + Math.Round(database.GetMonthRating(today), 2) + " / 5";
+        weekGrade.text = "  Week Grade :  " + database.GetWeekGrade(today);
+        weekRating.text = "  Week Rating :  " + Math.Round(database.GetWeekRating(today), 2) + " / 5";
+        monthGrade.text = "  Month Grade :  " + database.GetMonthGrade(today);
+        monthRating.text = "  Month Rating :  " + Math.Round(database.GetMonthRating(today), 2) + " / 5";
 
     }
 
+    // go to previous month
     public void GoToLastMonth(){
 
         Refresh(new DateTime(current.Year, current.Month, 1).AddMonths(-1));
 
     }
 
+    // go to next month
     public void GoToNextMonth(){
 
         Refresh(new DateTime(current.Year, current.Month, 1).AddMonths(1));
 
     }
 
+    // set mode (0 = dates, 1 = ratings, 2 = grades)
     public void SetMode(int mode){
 
         this.mode = mode;
@@ -109,7 +116,8 @@ public class CalendarController : MonoBehaviour
 
     }
 
-    public string GetDayLabel(DateTime date){
+    // get label for a calendar day given mode variable
+    public string GetDayLabel(DateTime date, int mode){
 
         // default is day of month
         string output = date.Day + "";
@@ -136,6 +144,7 @@ public class CalendarController : MonoBehaviour
 
     }
 
+    // click calendar day to view complete record
     public void ViewPreviousDay(DateTime date){
 
         previousDayView.ViewDay(date);

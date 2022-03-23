@@ -33,10 +33,14 @@ public class DBController : MonoBehaviour
     // create tables if DNE: doses, daily records, logs
     private void CreateTables(){
 
+        // create doses table with: id, name, time, weekdays x 7, active, priority, color, shape
         dao.command("CREATE TABLE IF NOT EXISTS doses (id INTEGER PRIMARY KEY, name VARCHAR(255), time BIGINT, sun BOOL, mon BOOL, tue BOOL, wed BOOL, thu BOOL, fri BOOL, sat BOOL, active BOOL, stars INT, color INT, shape INT);");
 
+        // create dates table with: date, rating, tags
         dao.command("CREATE TABLE IF NOT EXISTS dates (date DATE PRIMARY KEY, rating INTEGER, tags VARCHAR(512));");
 
+        // create logs table with: date, id, status
+        // primary key is composite: (dose) id and date
         dao.command("CREATE TABLE IF NOT EXISTS logs (date DATE, id INTEGER, status INTEGER, PRIMARY KEY(date, id));");
 
     }

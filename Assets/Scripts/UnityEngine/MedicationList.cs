@@ -48,7 +48,7 @@ public class MedicationList : MonoBehaviour
 
     public void EditMedication(int id){
 
-        editor.Open(menu, id);
+        editor.Open(id);
 
     }
 

@@ -13,30 +13,25 @@ public class MedicationEditor : MonoBehaviour
     public GameObject amToggle;
     public GameObject pmToggle;
     public GameObject[] starOns;
-    public GameObject tabs;
+    public GameObject main;
     public Toggle[] weekdays;
     public bool ifPM;   // true if PM, false if AM
 
     public MedicationController controller;
     private Medication medication;
 
-    private GameObject referrer;
-
     // defaults to index = -1
-    public void Open(GameObject referrer){
+    public void Open(){
 
-        Open(referrer, -1);
+        Open(-1);
 
     }
 
     // if index == -1, a new medication will be created
     // otherwise, the medication at the index will be accessed
-    public void Open(GameObject referrer, int id){
+    public void Open(int id){
 
-        tabs.SetActive(false);
-
-        this.referrer = referrer;
-        referrer.SetActive(false);
+        main.SetActive(false);
         menu.SetActive(true);
         
         // create new medication or get existing medication
@@ -76,6 +71,7 @@ public class MedicationEditor : MonoBehaviour
 
     }
 
+    // update our medication object with new data
     public void UpdateInfo(){
 
         int hour = int.Parse(medHour.text); // get hour
@@ -112,38 +108,50 @@ public class MedicationEditor : MonoBehaviour
 
     }
 
+    // toggle time as being AM or PM
     public void ToggleAMPM(bool pm){
         ifPM = pm;
         UpdateInfo();
     }
 
+    // close editor menu
     private void Close(){
 
         controller.Refresh();
-        referrer.SetActive(true);
-        menu.SetActive(false);
-        tabs.SetActive(true);
+        menu.SetActive(false);      // set our own menu inactive
+        main.SetActive(true);       // set main menu active again
 
     }
 
+    // save medication in database
     public void SaveMedication(){
 
+        // if new medication, save as new object
         if(medication.ID == -1)
             controller.AddMedication(medication);
+
+        // otherwise, update existing record
         else
             controller.EditMedication(medication);
+
+        // close app
         Close();
 
     }
 
+    // delete medication
     public void DeleteMedication(){
 
+        // if medication is one that already exists, delete from database
         if(medication.ID != -1)
             controller.DeleteMedication(medication);
+
+        // close menu
         Close();
 
     }
 
+    // change medication priority
     public void ChangeStars(int stars){
 
         medication.Stars = stars;
