@@ -35,7 +35,7 @@ public class MedicationEditor : MonoBehaviour
         menu.SetActive(true);
         
         // create new medication or get existing medication
-        medication = id == -1 ? new Medication() : controller.GetMedicationByID(id);
+        medication = id == -1 ? new Medication() : controller.GetMedication(id);
 
         // set if time is AM or PM
         ifPM = medication.NotifyTime.Hours > 11;
@@ -48,24 +48,31 @@ public class MedicationEditor : MonoBehaviour
 
     public void Refresh(){
 
+        // set name
         medName.text = medication.Name;
+
+        // get time (and convert from 24-hour clock to AM/PM)
         int hour = medication.NotifyTime.Hours;
         bool pm = hour > 11;
         if(pm) hour -= 12;
         if(hour == 0) hour = 12;
         int minutes = medication.NotifyTime.Minutes;
 
+        // set label, accounting for 0 digit in front if single digit value
         medHour.text = hour < 10 ? "0" +  hour : hour + "";
         medMins.text = minutes < 10 ? "0" +  minutes : minutes + "";
 
+        // set stars active
         for(int s = 0; s < 3; s++){
             starOns[s].SetActive(s < medication.Stars);
         }
 
+        // set weekdays
         for(int d = 0; d < 7; d++){
             weekdays[d].isOn = medication.Weekdays[d];
         }
 
+        // set initial AM/PM toggle
         amToggle.SetActive(!pm);
         pmToggle.SetActive(pm);
 

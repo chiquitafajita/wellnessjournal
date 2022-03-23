@@ -16,17 +16,21 @@ public class MedicationItem : MonoBehaviour
 
     public void Refresh(MedicationController controller, Medication med){
 
+        // set controller and ID
         this.controller = controller;
         this.id = med.ID;
 
+        // set name label
         nameLabel.text = med.Name;
-        TimeSpan timeUntil = med.GetTimeUntil();
+
+        // status is 3 if not taken
+        // other statuses are defined in switch-case logic
         int status = controller.HasDoseBeenTakenToday(med.ID) ? 3 : med.GetTimePosition();
-        for(int s = 0; s < 3; s++){
-            stars[s].isOn = s < med.Stars;
-            stars[s].interactable = false;
-        }
+        TimeSpan timeUntil = med.GetTimeUntil();
+
         switch(status){
+
+            // case 0 means time has not come
             case 0: 
                 statusLabelRegular.gameObject.SetActive(true);
                 statusLabelLate.gameObject.SetActive(false);
@@ -36,12 +40,16 @@ public class MedicationItem : MonoBehaviour
                 else
                     statusLabelRegular.text = "Due in " + timeUntil.Minutes + " minutes.";
                 break;
+            
+            // case 1 means we are in window
             case 1:
                 statusLabelRegular.gameObject.SetActive(true);
                 statusLabelLate.gameObject.SetActive(false);
                 statusLabelRegular.text = "Due now.";
                 takeButton.interactable = true;
                 break;
+            
+            // case 2 means late
             case 2:
                 statusLabelRegular.gameObject.SetActive(false);
                 statusLabelLate.gameObject.SetActive(true);
@@ -52,12 +60,20 @@ public class MedicationItem : MonoBehaviour
                 else
                     statusLabelLate.text = "Due " + timeUntil.Minutes + " minutes ago (Late).";
                 break;
+
+            // case 3 means it has been taken
             default:
                 statusLabelRegular.gameObject.SetActive(true);
                 statusLabelLate.gameObject.SetActive(false);
                 statusLabelRegular.text = "Taken.";
                 takeButton.interactable = false;
                 break;
+        }
+
+        // set stars
+        for(int s = 0; s < 3; s++){
+            stars[s].isOn = s < med.Stars;
+            stars[s].interactable = false;
         }
 
     }

@@ -14,6 +14,7 @@ public class MedicationController : MonoBehaviour
     public CalendarController calendar;
     public bool showTakenDoses = false;
 
+    // set up all GUI elements and refresh them
     private void Awake() {
         calendar.Setup();
         checklist.Setup();
@@ -22,6 +23,7 @@ public class MedicationController : MonoBehaviour
         tags.Refresh(TimeKeeper.GetDate());
     }
 
+    // refresh all GUI elements
     public void Refresh(){
         calendar.Refresh();
         checklist.Refresh();
@@ -30,8 +32,10 @@ public class MedicationController : MonoBehaviour
         tags.Refresh(TimeKeeper.GetDate());
     }
 
+    // add medication to database
     public void AddMedication(Medication medication){
 
+        // returns id
         int id = database.InsertMedication(medication);
 
         // if the notify time was designated prior to when it was created
@@ -39,15 +43,18 @@ public class MedicationController : MonoBehaviour
         if(medication.GetTimePosition() == 2)
             database.ChangeLogStatus(id, TimeKeeper.GetDate(), 2);
 
+        // refresh all GUI
         Refresh();
 
     }
 
+    // edit medication and refresh all GUI
     public void EditMedication(Medication medication){
         database.UpdateMedication(medication);
         Refresh();
     }
 
+    // take medication and refresh all GUI
     public void TakeMedication(int id){
         int status = database.GetMedication(id).GetTimePosition() == 2 ?    // equals 2 if late
                     1 : 2;  // if late, status is 1; otherwise it is 2
@@ -56,29 +63,35 @@ public class MedicationController : MonoBehaviour
         Refresh();
     }
 
+    // delete medication and refresh all GUI
     public void DeleteMedication(Medication medication){
         database.DeleteMedication(medication);
         Refresh();
     }
 
-    public Medication GetMedicationByID(int id){
+    // get medication from database by ID
+    public Medication GetMedication(int id){
 
         return database.GetMedication(id);
 
     }
 
+    // get all medications
     public List<Medication> GetAllMedications(){
 
         return database.GetAllMedications();
 
     }
 
+    // get doses scheduled for a given day (i.e. doses that have a log for that date)
     public List<Medication> GetMedicationsScheduledForDate(DateTime date){
 
+        // 'showTakenDoses' toggles if doses with non-0 logs (i.e. those taken) are included
         return database.GetDosesForDay(date, showTakenDoses);
 
     }
 
+    // returns true if dose has been taken today
     public bool HasDoseBeenTakenToday(int id){
 
         // if status is > 0, then it has not been taken or taken late

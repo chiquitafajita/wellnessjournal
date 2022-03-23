@@ -45,20 +45,24 @@ public class CalendarController : MonoBehaviour
     // refresh calendar view with given date
     public void Refresh(DateTime includedDate){
 
+        // get year and month
         int year = includedDate.Year;
         int month = includedDate.Month;
 
+        // set month label, incl. year
         monthLabel.text = TimeKeeper.GetMonth(month) + " " + year;
 
+        // clear object pools
         days.Clear();
         blanks.Clear();
 
-        GameObject go;
         
         // add blanks in first week of the month
         current = new DateTime(year, month, 1);
+        GameObject go;
         for(int d = 0; d < (int)current.DayOfWeek; d++){
 
+            // create blank object
             go = blanks.CreateNew();
             go.transform.SetParent(calendarGrid);
             go.transform.SetAsLastSibling();
@@ -69,11 +73,15 @@ public class CalendarController : MonoBehaviour
         // add days that are actually in the month
         for(int i = 0; i < DateTime.DaysInMonth(year, month); i++){
 
+            // set current date
             current = new DateTime(year, month, i+1);
 
+            // create day object
             go = days.CreateNew();
             go.transform.SetParent(calendarGrid);
             go.transform.SetAsLastSibling();
+
+            // refresh object with data about the day
             CalendarDay cd = go.GetComponent<CalendarDay>();
             cd.Refresh(this, current, GetDayLabel(current, mode), database.IsDayRecorded(current));
 
@@ -87,6 +95,7 @@ public class CalendarController : MonoBehaviour
         DateTime today = TimeKeeper.GetDate();
         nextMonth.interactable = includedDate.Month < today.Month || includedDate.Year < today.Year;
 
+        // set labels
         weekGrade.text = "  Week Grade :  " + database.GetWeekGrade(today);
         weekRating.text = "  Week Rating :  " + Math.Round(database.GetWeekRating(today), 2) + " / 5";
         monthGrade.text = "  Month Grade :  " + database.GetMonthGrade(today);
@@ -94,14 +103,14 @@ public class CalendarController : MonoBehaviour
 
     }
 
-    // go to previous month
+    // go to previous month (current month - 1)
     public void GoToLastMonth(){
 
         Refresh(new DateTime(current.Year, current.Month, 1).AddMonths(-1));
 
     }
 
-    // go to next month
+    // go to next month (current month + 1)
     public void GoToNextMonth(){
 
         Refresh(new DateTime(current.Year, current.Month, 1).AddMonths(1));
