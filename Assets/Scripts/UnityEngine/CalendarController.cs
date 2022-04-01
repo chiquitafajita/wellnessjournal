@@ -13,6 +13,7 @@ public class CalendarController : MonoBehaviour
     public GameObject blankTemplate;
     public PreviousDayView previousDayView;
     public Transform calendarGrid;
+    public RectTransform calendarItem;
     public Text monthLabel;
     public Text weekGrade;
     public Text monthGrade;
@@ -85,6 +86,18 @@ public class CalendarController : MonoBehaviour
             CalendarDay cd = go.GetComponent<CalendarDay>();
             cd.Refresh(this, current, GetDayLabel(current, mode), database.IsDayRecorded(current));
 
+        }
+
+        // change height of calendar box to include more days
+        int count = blanks.Count + days.Count;
+        if(count > 35){
+            calendarItem.sizeDelta = new Vector2(216, 210);
+        }
+        else if(count > 28){
+            calendarItem.sizeDelta = new Vector2(216, 180);
+        }
+        else{
+            calendarItem.sizeDelta = new Vector2(216, 150);
         }
 
         // only enable "prev month" button if this is not the earliest month

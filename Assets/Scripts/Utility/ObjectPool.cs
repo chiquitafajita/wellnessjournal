@@ -16,6 +16,8 @@ public class ObjectPool
     // the template object we clone
     GameObject template;
 
+    public int Count { get { return used + 1;}}
+
     // constructor for a pool
     public ObjectPool(GameObject template){
 
