@@ -9,6 +9,7 @@ public class MedicationPastItem : MonoBehaviour
     public Text nameLabel;
     public Text statusLabel;
     public Toggle[] stars;
+    public MedicationIcon icon;
 
     private DBController database;
     private MedicationController controller;
@@ -18,19 +19,25 @@ public class MedicationPastItem : MonoBehaviour
 
     public void Refresh(DBController database, Medication med, DateTime date){
 
-        this.database = database;
-        this.id = med.ID;
-        this.date = date;
+        this.database = database;   // get db
+        this.id = med.ID;           // get id
+        this.date = date;           // get date
 
+        // refresh name
         nameLabel.text = med.Name;
-        status = database.GetLogStatus(id, date);
 
+        // refresh stars
         for(int s = 0; s < 3; s++){
             stars[s].isOn = s < med.Stars;
             stars[s].interactable = false;
         }
 
+        // refresh status label
+        status = database.GetLogStatus(id, date);
         RefreshStatusLabel();
+
+        // set icon (with shape and color)
+        icon.Refresh(med);
 
     }
 

@@ -10,8 +10,9 @@ public class MedicationRecord : MonoBehaviour
     public Text timeLabel;
     public Toggle[] stars;
     public Text[] weekdays;
-    private int id;
+    public MedicationIcon icon;
 
+    private int id;
     private MedicationList list;
 
     public void Refresh(MedicationList list, Medication med){
@@ -56,6 +57,9 @@ public class MedicationRecord : MonoBehaviour
         for(int d = 0; d < 7; d++){
             weekdays[d].color = med.Weekdays[d] ? Color.white : new Color(0, 0, 0, 0.75F);
         }
+
+        // set icon (with shape and color)
+        icon.Refresh(med);
 
     }
 

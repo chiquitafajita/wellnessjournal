@@ -10,6 +10,7 @@ public class MedicationItem : MonoBehaviour
     public Text statusLabelLate;
     public Button takeButton;
     public Toggle[] stars;
+    public MedicationIcon icon;
 
     private MedicationController controller;
     private int id;
@@ -76,6 +77,8 @@ public class MedicationItem : MonoBehaviour
             stars[s].interactable = false;
         }
 
+        // set icon (with shape and color)
+        icon.Refresh(med);
     }
 
     public void Take(){
