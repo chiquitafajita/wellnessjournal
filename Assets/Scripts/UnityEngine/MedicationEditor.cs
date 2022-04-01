@@ -13,6 +13,7 @@ public class MedicationEditor : MonoBehaviour
     public GameObject amToggle;
     public GameObject pmToggle;
     public GameObject[] starOns;
+    public Button[] shapes;
     public GameObject main;
     public Toggle[] weekdays;
     public bool ifPM;   // true if PM, false if AM
@@ -70,6 +71,13 @@ public class MedicationEditor : MonoBehaviour
         // set weekdays
         for(int d = 0; d < 7; d++){
             weekdays[d].isOn = medication.Weekdays[d];
+        }
+
+        for(int s = 0; s < shapes.Length; s++){
+            shapes[s].interactable = medication.Shape != s;
+            shapes[s].GetComponent<Image>().color = medication.Shape == s 
+                ? PillColors.GetColor(medication.Color)
+                : new Color(0, 0, 0, 0.5F);
         }
 
         // set initial AM/PM toggle
@@ -162,6 +170,22 @@ public class MedicationEditor : MonoBehaviour
     public void ChangeStars(int stars){
 
         medication.Stars = stars;
+        UpdateInfo();
+
+    }
+
+    // change medication shape
+    public void ChangeShape(int shape){
+
+        medication.Shape = shape;
+        UpdateInfo();
+
+    }
+
+    // change medication color
+    public void ChangeColor(int color){
+
+        medication.Color = color;
         UpdateInfo();
 
     }
