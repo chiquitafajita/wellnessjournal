@@ -16,7 +16,7 @@ Alternatively, you may build this app as an EXE, as an APK for Android devices, 
 
 Since the app's functionality depends largely on consistent usage, it is difficult to create unit tests for any individual feature.
 
-Nevertheless, we have developed two unit tests for use in the Unity Editor.
+Nevertheless, we have developed two unit tests for use in the Unity Editor, using the Unity Test Framework (UTF).
 
 ## Recent Features
 
