@@ -62,7 +62,6 @@ public static class PillColors{
 
     public static Color CreateColor(int r, int g, int b){
 
-        Debug.Log(r + " " + g + " " + b);
         return new Color((float)r / 0xFF, (float)g / 0xFF, (float)b / 0xFF, 1);
 
     }

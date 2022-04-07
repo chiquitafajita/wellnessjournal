@@ -12,6 +12,7 @@ public class MedicationController : MonoBehaviour
     public DayRater dayRater;
     public TagWriter tags;
     public CalendarController calendar;
+    public MicrojournalController microjournal;
     public bool showTakenDoses = false;
 
     // set up all GUI elements and refresh them
@@ -21,6 +22,7 @@ public class MedicationController : MonoBehaviour
         listAll.Setup();
         dayRater.Refresh(TimeKeeper.GetDate());
         tags.Refresh(TimeKeeper.GetDate());
+        microjournal.Refresh();
     }
 
     // refresh all GUI elements
@@ -30,6 +32,7 @@ public class MedicationController : MonoBehaviour
         listAll.Refresh();
         dayRater.Refresh(TimeKeeper.GetDate());
         tags.Refresh(TimeKeeper.GetDate());
+        microjournal.Refresh();
     }
 
     // add medication to database
