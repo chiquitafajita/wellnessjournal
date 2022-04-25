@@ -13,6 +13,7 @@ public class DayRater : MonoBehaviour
 
     private DateTime date;
 
+    // refresh GUI with given date
     public void Refresh(DateTime date){
 
         this.date = date;
@@ -20,6 +21,7 @@ public class DayRater : MonoBehaviour
 
     }
 
+    // refresh rating display by setting star objects active or inactive
     private void RefreshAppearance(int rating){
 
         for(int s = 0; s < 5; s++){
@@ -28,6 +30,7 @@ public class DayRater : MonoBehaviour
 
     }
 
+    // change rating of day (called by GUI)
     public void ChangeRating(int rating){
 
         RefreshAppearance(rating);

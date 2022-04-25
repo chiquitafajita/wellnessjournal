@@ -13,11 +13,13 @@ public class MedicationList : MonoBehaviour
     private List<Medication> meds;
     private ObjectPool items;
 
+    // create object pool and refresh to load items
     public void Setup(){
         items = new ObjectPool(itemTemplate);
         Refresh();
     }
 
+    // load medication list items
     public void Refresh(){
 
         meds = controller.GetAllMedications();

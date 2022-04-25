@@ -41,6 +41,7 @@ public class MedicationPastItem : MonoBehaviour
 
     }
 
+    // labels of status as defined in database
     private void RefreshStatusLabel(){
 
         switch(status){
@@ -59,9 +60,9 @@ public class MedicationPastItem : MonoBehaviour
 
     public void ClickSelf(){
 
-        status = status > 2 ? 0 : status + 1;
-        RefreshStatusLabel();
-        database.ChangeLogStatus(id, date, status);
+        status = status > 2 ? 0 : status + 1;       // change status between 0, 1, 2
+        RefreshStatusLabel();                       // refresh label
+        database.ChangeLogStatus(id, date, status); // update status in database
 
     }
 

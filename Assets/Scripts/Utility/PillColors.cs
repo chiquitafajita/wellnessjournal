@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public static class PillColors{
+
+    // hard-coded color codes for medication icons
     public static Color GetColor(int code){
 
         Color color = new Color(0, 0, 0);
@@ -60,6 +62,7 @@ public static class PillColors{
 
     }
 
+    // convert RGB value to Unity color object
     public static Color CreateColor(int r, int g, int b){
 
         return new Color((float)r / 0xFF, (float)g / 0xFF, (float)b / 0xFF, 1);

@@ -16,15 +16,18 @@ public class MicrojournalEntry : MonoBehaviour
 
     public void Refresh(MicrojournalController controller, DateTime date, int stars, String entry){
 
+        // set date and controller
         this.date = date;
         this.controller = controller;
 
+        // set entry text, date, and day rating
         content.text = entry;
         dateLabel.text = TimeKeeper.GetMonth(date.Month) + " " + date.Day + ", " + date.Year;
         rating.text = stars + "";
 
     }
 
+    // when clicking this entry, view the record of that day
     public void ClickSelf(){
 
         controller.ViewPreviousDay(date);

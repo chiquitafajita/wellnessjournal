@@ -10,9 +10,10 @@ public class MedicationIcon : MonoBehaviour {
 
     public void Refresh(Medication med){
 
+        // for each possible shape object
         for(int s = 0; s < shapes.Length; s++){
-            shapes[s].gameObject.SetActive(s == med.Shape);
-            shapes[s].color = PillColors.GetColor(med.Color);
+            shapes[s].gameObject.SetActive(s == med.Shape);     // set object active if right shape
+            shapes[s].color = PillColors.GetColor(med.Color);   // change color of shape as defined
         }
 
     }
