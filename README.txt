@@ -13,3 +13,10 @@ The app was developed using Unity Editor Version 2020.3.27f1. Having installed t
 On the editor, you can access and run unit tests by navigating to the Test Runner window (Window > General > Test Runner) and clicking "Run All".
 
 Alternatively, you may build this app as an EXE, as an APK for Android devices, or as an iOS app (only possible when running Unity on a Mac computer). Navigate to File -> Build Settings to view a list of platforms, click 'Switch Platform' if the one viewed is not already selected, and then click 'Build' to build the app for that platform. Refer to the [Unity documentation](https://docs.unity3d.com/Manual/BuildSettings.html) for further guidance if needed.
+
+## Recent Features
+
+Since we first demonstrated the project, we have implemented the following new features:
+
+- **Custom Dose Icons:** The user can change the icon for a scheduled dose by selecting its shape and color from the medication editor view.
+- **Microjournal Tab:** The user can view all microjournal entries in chronological order, and click on an entry to view its associated day record.

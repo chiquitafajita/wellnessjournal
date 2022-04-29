@@ -14,12 +14,6 @@ On the editor, you can access and run unit tests by navigating to the Test Runne
 
 Alternatively, you may build this app as an EXE, as an APK for Android devices, or as an iOS app (only possible when running Unity on a Mac computer). Navigate to File -> Build Settings to view a list of platforms, click 'Switch Platform' if the one viewed is not already selected, and then click 'Build' to build the app for that platform. Refer to the [Unity documentation](https://docs.unity3d.com/Manual/BuildSettings.html) for further guidance if needed.
 
-### Unit Testing
-
-Since the app's functionality depends largely on consistent usage, it is difficult to create unit tests for any individual feature.
-
-Nevertheless, we have developed two unit tests for use in the Unity Editor, using the Unity Test Framework (UTF).
-
 ## Recent Features
 
 Since we first demonstrated the project, we have implemented the following new features:
