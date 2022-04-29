@@ -10,6 +10,8 @@ Second, it is a microjournal for the user to record their mood or changes in sym
 
 The app was developed using Unity Editor Version 2020.3.27f1. Having installed this version of the Unity Editor from the [Unity website](https://unity3d.com/get-unity/download), open this project in the editor. You can run the project directly from the editor by clicking the 'play' button at the top of the screen.
 
+On the editor, you can access and run unit tests by navigating to the Test Runner window (Window > General > Test Runner) and clicking "Run All".
+
 Alternatively, you may build this app as an EXE, as an APK for Android devices, or as an iOS app (only possible when running Unity on a Mac computer). Navigate to File -> Build Settings to view a list of platforms, click 'Switch Platform' if the one viewed is not already selected, and then click 'Build' to build the app for that platform. Refer to the [Unity documentation](https://docs.unity3d.com/Manual/BuildSettings.html) for further guidance if needed.
 
 ### Unit Testing

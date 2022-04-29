@@ -4,11 +4,11 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class ColorTest
+public class TestSuite
 {
-    // A Test behaves as an ordinary method
+    // Unit test for custom color creation function
     [Test]
-    public void ColorTestSimplePasses()
+    public void TestColorConversion()
     {
         // define hex values for RGB
         int red = 0x40;
@@ -24,5 +24,7 @@ public class ColorTest
         Assert.AreEqual(color.b, (float) blue / 255);
 
     }
+
+    
 
 }
